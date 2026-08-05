@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CHEM 1000 Conversion problem practice</title>
-  <meta name="description" content="Dimensional-analysis conversion practice for CHEM 1000.">
+  <title>CHEM 1000 Topic Practice</title>
+  <meta name="description" content="Topic-based chemistry practice for CHEM 1000.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,7 +13,7 @@
       <div class="topline">
         <div>
           <p class="course-label">Cedarville University CHEM 1000</p>
-          <h1 id="app-title">CHEM 1000 Conversion problem practice</h1>
+          <h1 id="app-title">CHEM 1000 Topic Practice</h1>
         </div>
         <div class="score-panel" aria-live="polite">
           <span class="score-label">Score</span>
@@ -21,12 +21,20 @@
         </div>
       </div>
 
-      <div class="control-strip" aria-label="Problem controls">
-        <label class="field-label" for="topicSelect">Topic</label>
-        <select id="topicSelect"></select>
-        <button id="newProblemButton" type="button">New problem</button>
-        <button id="hintButton" type="button">Show hint</button>
-        <button id="solutionButton" type="button">Show solution</button>
+      <div class="control-strip" aria-label="Practice controls">
+        <div class="field-group">
+          <label class="field-label" for="topicSelect">Practice topic</label>
+          <select id="topicSelect"></select>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="problemTypeSelect">Problem type</label>
+          <select id="problemTypeSelect"></select>
+        </div>
+        <div class="button-group">
+          <button id="newProblemButton" type="button">New problem</button>
+          <button id="hintButton" type="button">Show hint</button>
+          <button id="solutionButton" type="button">Show solution</button>
+        </div>
       </div>
 
       <section class="problem-area" aria-labelledby="problemTopic">
@@ -37,11 +45,11 @@
         <p id="questionText" class="question-text"></p>
 
         <div class="unit-path" aria-hidden="true">
-          <span>given unit</span>
+          <span>given information</span>
           <span class="path-line"></span>
-          <span>conversion factor</span>
+          <span>relationship</span>
           <span class="path-line"></span>
-          <span>requested unit</span>
+          <span>requested answer</span>
         </div>
 
         <form id="answerForm" class="answer-row">
@@ -60,7 +68,9 @@
     </section>
   </main>
 
-  <script src="practice_logic.js"></script>
+  <script src="practice_shell.js"></script>
+  <script src="topics/conversions.js"></script>
+  <script src="topics/topic_registry.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

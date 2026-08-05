@@ -4,6 +4,7 @@
   const logic = window.ChemPracticeLogic;
 
   const topicSelect = document.getElementById("topicSelect");
+  const problemTypeSelect = document.getElementById("problemTypeSelect");
   const newProblemButton = document.getElementById("newProblemButton");
   const hintButton = document.getElementById("hintButton");
   const solutionButton = document.getElementById("solutionButton");
@@ -25,17 +26,27 @@
   };
 
   function setupTopicMenu() {
-    const topics = [logic.MIXED_TOPIC].concat(Object.keys(logic.PROBLEM_GENERATORS));
     topicSelect.replaceChildren();
 
-    for (const topic of topics) {
+    for (const topic of logic.getTopicOptions()) {
       const option = document.createElement("option");
-      option.value = topic;
-      option.textContent = topic;
+      option.value = topic.id;
+      option.textContent = topic.name;
       topicSelect.appendChild(option);
     }
 
-    topicSelect.value = logic.MIXED_TOPIC;
+    setupProblemTypeMenu();
+  }
+
+  function setupProblemTypeMenu() {
+    problemTypeSelect.replaceChildren();
+
+    for (const problemType of logic.getProblemTypeOptions(topicSelect.value)) {
+      const option = document.createElement("option");
+      option.value = problemType.value;
+      option.textContent = problemType.label;
+      problemTypeSelect.appendChild(option);
+    }
   }
 
   function setFeedback(text, kind) {
@@ -64,18 +75,18 @@
   }
 
   function newProblem() {
-    state.currentProblem = logic.generateProblem(topicSelect.value);
+    state.currentProblem = logic.generateProblem(topicSelect.value, problemTypeSelect.value);
     state.problemCompleted = false;
     state.currentProblemAttempts = 0;
     state.hintCount = 0;
 
-    problemTopic.textContent = state.currentProblem.topic;
+    problemTopic.textContent = `${state.currentProblem.practiceTopicName}: ${state.currentProblem.problemType}`;
     questionText.textContent = state.currentProblem.question;
     answerInput.value = "";
     answerInput.focus();
     updateAttemptText();
     setFeedback(
-      "Enter your answer, then choose Check answer. You have two attempts for this problem. Units are welcome but not required.\n\nTip: arrange each conversion factor so the unwanted unit cancels.",
+      "Enter your answer, then choose Check answer. You have two attempts for this problem. Units are welcome but not required.\n\nTip: arrange each relationship so the unwanted unit cancels and the requested unit remains.",
       "neutral"
     );
   }
@@ -165,7 +176,11 @@
   newProblemButton.addEventListener("click", newProblem);
   hintButton.addEventListener("click", showHint);
   solutionButton.addEventListener("click", showSolution);
-  topicSelect.addEventListener("change", newProblem);
+  topicSelect.addEventListener("change", function () {
+    setupProblemTypeMenu();
+    newProblem();
+  });
+  problemTypeSelect.addEventListener("change", newProblem);
   answerForm.addEventListener("submit", function (event) {
     event.preventDefault();
     checkAnswer();

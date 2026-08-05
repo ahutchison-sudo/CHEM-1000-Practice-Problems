@@ -124,10 +124,23 @@ h1 {
 
 .control-strip {
   display: grid;
-  grid-template-columns: auto minmax(220px, 1fr) repeat(3, auto);
+  grid-template-columns: minmax(210px, 0.8fr) minmax(240px, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+  padding: 18px 0;
+}
+
+.field-group {
+  display: grid;
+  gap: 6px;
+}
+
+.button-group {
+  display: flex;
   gap: 10px;
   align-items: center;
-  padding: 18px 0;
+  justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .field-label {
@@ -263,6 +276,14 @@ input {
     grid-template-columns: 1fr;
   }
 
+  .button-group {
+    justify-content: stretch;
+  }
+
+  .button-group button {
+    flex: 1 1 150px;
+  }
+
   .score-panel {
     width: 100%;
     min-width: 0;
@@ -285,3 +306,4 @@ input {
     width: 100%;
   }
 }
+
