@@ -1,7 +1,7 @@
 ﻿const assert = require("assert");
 const logic = require("./practice_logic.js");
 
-function makeProblem(overrides = {}) {
+function makeNumericProblem(overrides = {}) {
   return {
     topic: "Test topic",
     question: "Convert 1 g to mg.",
@@ -18,18 +18,39 @@ function makeProblem(overrides = {}) {
   };
 }
 
-const topicOptions = logic.getTopicOptions();
-assert.strictEqual(topicOptions.length, 1);
-assert.deepStrictEqual(topicOptions[0], {
-  id: "unit-conversions-and-dosing",
-  name: "Unit conversions and dosing",
-  description: "Dimensional-analysis practice with SI conversions, SI/imperial conversions, and dosing calculations."
-});
+function makeCoefficientProblem(overrides = {}) {
+  return {
+    topic: "Balancing test",
+    answerType: "coefficients",
+    question: "Balance H2 + O2 -> H2O.",
+    coefficients: [2, 1, 2],
+    coefficientLabels: ["H2", "O2", "H2O"],
+    answerText: "2, 1, 2\nBalanced equation: 2 H2 + O2 -> 2 H2O",
+    unit: "",
+    firstHint: "Balance hydrogen first, then oxygen.",
+    secondHint: "Use this order: H2, O2, H2O.",
+    explanation: "Coefficients: 2, 1, 2",
+    reasoningLabel: "Balancing reasoning",
+    ...overrides
+  };
+}
 
-const problemTypeOptions = logic.getProblemTypeOptions("unit-conversions-and-dosing");
-assert.strictEqual(problemTypeOptions[0].label, "random conversion problem");
-assert.ok(problemTypeOptions.some((option) => option.label === "SI unit conversions"));
-assert.ok(problemTypeOptions.some((option) => option.label === "Multistep dosing"));
+const topicOptions = logic.getTopicOptions();
+assert.ok(topicOptions.some((topic) => topic.id === "unit-conversions-and-dosing"));
+assert.ok(topicOptions.some((topic) => topic.id === "balancing-chemical-reactions"));
+
+const conversionProblemTypes = logic.getProblemTypeOptions("unit-conversions-and-dosing");
+assert.strictEqual(conversionProblemTypes[0].label, "random conversion problem");
+assert.ok(conversionProblemTypes.some((option) => option.label === "SI unit conversions"));
+assert.ok(conversionProblemTypes.some((option) => option.label === "Multistep dosing"));
+
+const balancingProblemTypes = logic.getProblemTypeOptions("balancing-chemical-reactions");
+assert.strictEqual(balancingProblemTypes[0].label, "random balancing problem");
+assert.ok(balancingProblemTypes.some((option) => option.label === "Combustion reactions"));
+assert.ok(balancingProblemTypes.some((option) => option.label === "Double replacement and acid reactions"));
+
+assert.deepStrictEqual(logic.parseCoefficientList("2, 1, 2"), [2, 1, 2]);
+assert.deepStrictEqual(logic.parseCoefficientList("2 1 2"), [2, 1, 2]);
 
 assert.strictEqual(logic.extractNumber("18.02 g/mol"), 18.02);
 assert.strictEqual(logic.extractNumber("6.02e23 particles"), 6.02e23);
@@ -45,21 +66,36 @@ assert.strictEqual(logic.formatToSignificantFigures(0.125, 2), "0.13");
 assert.strictEqual(logic.formatToSignificantFigures(200, 2), "200");
 assert.ok(!logic.formatToSignificantFigures(200, 2).includes("x 10"));
 
-let result = logic.evaluateAnswer(makeProblem({ answer: 225, answerText: "200" }), "225 mg");
+let result = logic.evaluateAnswer(makeNumericProblem({ answer: 225, answerText: "200" }), "225 mg");
 assert.strictEqual(result.isCorrect, true);
 assert.strictEqual(result.shouldCount, true);
 assert.ok(result.feedback.includes("Significant figures note"));
 
-result = logic.evaluateAnswer(makeProblem({ answer: 200, answerText: "200", expectedSigFigs: 2 }), "200 mg");
+result = logic.evaluateAnswer(makeNumericProblem({ answer: 200, answerText: "200", expectedSigFigs: 2 }), "200 mg");
 assert.strictEqual(result.isCorrect, true);
 assert.strictEqual(result.shouldCount, true);
 assert.ok(!result.feedback.includes("Significant figures note"));
 assert.ok(!result.feedback.includes("x 10"));
 
-result = logic.evaluateAnswer(makeProblem(), "500 mg");
+result = logic.evaluateAnswer(makeNumericProblem(), "500 mg");
 assert.strictEqual(result.isCorrect, false);
 assert.strictEqual(result.shouldCount, true);
 assert.ok(result.feedback.includes("Not quite"));
+
+result = logic.evaluateAnswer(makeCoefficientProblem(), "2, 1, 2");
+assert.strictEqual(result.isCorrect, true);
+assert.strictEqual(result.shouldCount, true);
+assert.ok(result.feedback.includes("Balancing reasoning"));
+
+result = logic.evaluateAnswer(makeCoefficientProblem(), "4, 2, 4");
+assert.strictEqual(result.isCorrect, false);
+assert.strictEqual(result.shouldCount, true);
+assert.ok(result.feedback.includes("lowest whole-number"));
+
+result = logic.evaluateAnswer(makeCoefficientProblem(), "2 H2 + O2 -> 2 H2O");
+assert.strictEqual(result.isCorrect, false);
+assert.strictEqual(result.shouldCount, false);
+assert.ok(result.feedback.includes("coefficients, not the whole equation"));
 
 assert.deepStrictEqual(Object.fromEntries(logic.RANDOM_PROBLEM_WEIGHTS), {
   "SI unit conversions": 15,
@@ -89,8 +125,20 @@ for (const topic of Object.keys(logic.PROBLEM_GENERATORS)) {
   assert.ok(problem.explanation.length > 0);
 }
 
-const randomProblem = logic.generateProblem("unit-conversions-and-dosing", logic.RANDOM_PROBLEM_TYPE);
-assert.strictEqual(randomProblem.practiceTopicName, "Unit conversions and dosing");
-assert.ok(Object.keys(logic.PROBLEM_GENERATORS).includes(randomProblem.problemType));
+const randomConversionProblem = logic.generateProblem("unit-conversions-and-dosing", logic.RANDOM_PROBLEM_TYPE);
+assert.strictEqual(randomConversionProblem.practiceTopicName, "Unit conversions and dosing");
+assert.ok(Object.keys(logic.PROBLEM_GENERATORS).includes(randomConversionProblem.problemType));
+
+const randomBalancingProblem = logic.generateProblem("balancing-chemical-reactions", logic.RANDOM_PROBLEM_TYPE);
+assert.strictEqual(randomBalancingProblem.practiceTopicName, "Balancing chemical reactions");
+assert.strictEqual(randomBalancingProblem.answerType, "coefficients");
+assert.ok(randomBalancingProblem.coefficients.every((coefficient) => coefficient <= 15));
+assert.ok(randomBalancingProblem.question.includes("Balance this chemical equation"));
+
+for (const reactions of Object.values(logic.BALANCING_PROBLEM_GROUPS)) {
+  for (const reaction of reactions) {
+    assert.ok(reaction.coefficients.every((coefficient) => Number.isInteger(coefficient) && coefficient > 0 && coefficient <= 15));
+  }
+}
 
 console.log("All web app logic checks passed.");

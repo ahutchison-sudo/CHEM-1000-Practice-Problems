@@ -24,18 +24,24 @@ Canvas cannot embed the desktop Python version directly. This web version is des
 
 The app runs fully in the student's browser. It does not store grades, names, or student answers on a server. That makes it simpler to host, but it also means Canvas will not automatically receive scores.
 
-## Future Topic Apps
+## Topic-Based Practice Apps
 
-The app is now organized around practice topics instead of chapters. The shared shell can stay the same while each topic gets its own problem-logic file.
+The app is organized around practice topics instead of chapters. The shared shell stays the same while each topic gets its own problem-logic file.
+
+Current topics:
+
+- Unit conversions and dosing
+- Balancing chemical reactions
 
 A future structure could look like this:
 
 ```text
-topics/conversions.js
-topics/moles.js
-topics/stoichiometry.js
-topics/solution-concentration.js
-topics/gas-laws.js
+topic_conversions.js
+topic_balancing.js
+topic_moles.js
+topic_stoichiometry.js
+topic_solution_concentration.js
+topic_gas_laws.js
 ```
 
 Each topic can use the same two-attempt and feedback style.

@@ -19,9 +19,14 @@
     ? require("./topic_conversions.js")
     : root.ChemPracticeConversionTopic;
 
-  // Add future topic modules to this list. For example, a mole-conversions topic
-  // could be loaded in index.html and then added here after conversionTopic.
+  const balancingTopic = typeof require === "function"
+    ? require("./topic_balancing.js")
+    : root.ChemPracticeBalancingTopic;
+
+  // Add future topic modules to this list after their script files are loaded
+  // in index.html. The order here is the order students see in the menu.
   return [
-    conversionTopic
+    conversionTopic,
+    balancingTopic
   ];
 });

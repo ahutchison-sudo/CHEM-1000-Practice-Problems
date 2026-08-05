@@ -1,4 +1,4 @@
-(function (root, factory) {
+﻿(function (root, factory) {
   const api = factory();
   if (typeof module === "object" && module.exports) {
     module.exports = api;
@@ -92,6 +92,47 @@
     return problem.unit ? `${problem.answerText} ${problem.unit}` : problem.answerText;
   }
 
+  function parseCoefficientList(studentText) {
+    const matches = String(studentText).match(/[-+]?\d+/g);
+    if (!matches) {
+      return [];
+    }
+    return matches.map((text) => Number(text));
+  }
+
+  function formatCoefficientList(coefficients) {
+    return coefficients.join(", ");
+  }
+
+  function coefficientListsMatch(studentCoefficients, correctCoefficients) {
+    if (studentCoefficients.length !== correctCoefficients.length) {
+      return false;
+    }
+
+    return correctCoefficients.every((coefficient, index) => studentCoefficients[index] === coefficient);
+  }
+
+  function coefficientListIsScaledUp(studentCoefficients, correctCoefficients) {
+    if (studentCoefficients.length !== correctCoefficients.length || correctCoefficients.length === 0) {
+      return false;
+    }
+
+    const ratio = studentCoefficients[0] / correctCoefficients[0];
+    if (!Number.isInteger(ratio) || ratio <= 1) {
+      return false;
+    }
+
+    return correctCoefficients.every((coefficient, index) => studentCoefficients[index] === coefficient * ratio);
+  }
+
+  function coefficientOrderText(problem) {
+    if (!problem.coefficientLabels || problem.coefficientLabels.length === 0) {
+      return "the formulas from left to right";
+    }
+
+    return problem.coefficientLabels.map((label, index) => `${index + 1}. ${label}`).join("; ");
+  }
+
   function extractNumberDetails(text) {
     const cleanText = String(text).replace(/,/g, "");
     const classroomScientific = cleanText.match(/([-+]?(?:\d+(?:\.\d*)?|\.\d+))\s*(?:x|\*)\s*10\s*(?:\^|\*\*)?\s*([-+]?\d+)/i);
@@ -162,7 +203,74 @@
     return `\n\nSignificant figures note: You entered ${significantFigurePhrase(studentSigFigs)}. For this problem, use ${significantFigurePhrase(problem.expectedSigFigs)}. A properly rounded final answer is ${answerWithUnit(problem)}.`;
   }
 
+  function evaluateCoefficientAnswer(problem, studentText) {
+    const correctCoefficients = problem.coefficients || [];
+    const expectedCount = correctCoefficients.length;
+    const containsFormulaLetters = /[A-Za-z]/.test(String(studentText));
+
+    if (containsFormulaLetters) {
+      return {
+        isCorrect: false,
+        shouldCount: false,
+        feedback: `Enter only the coefficients, not the whole equation. For this problem, enter ${expectedCount} whole numbers in order: ${coefficientOrderText(problem)}.`
+      };
+    }
+
+    const studentCoefficients = parseCoefficientList(studentText);
+
+    if (studentCoefficients.length === 0) {
+      return {
+        isCorrect: false,
+        shouldCount: false,
+        feedback: `I could not find any coefficients. Enter ${expectedCount} whole numbers in order, using 1 when a formula does not need a visible coefficient.`
+      };
+    }
+
+    if (studentCoefficients.length !== expectedCount) {
+      return {
+        isCorrect: false,
+        shouldCount: false,
+        feedback: `I found ${studentCoefficients.length} coefficient(s), but this equation needs ${expectedCount}. Enter one coefficient for each formula in this order: ${coefficientOrderText(problem)}.`
+      };
+    }
+
+    if (studentCoefficients.some((coefficient) => !Number.isInteger(coefficient) || coefficient <= 0)) {
+      return {
+        isCorrect: false,
+        shouldCount: false,
+        feedback: "Use positive whole-number coefficients only. If a formula does not need a visible coefficient, enter 1 for that position."
+      };
+    }
+
+    if (coefficientListsMatch(studentCoefficients, correctCoefficients)) {
+      const reasoningLabel = problem.reasoningLabel || "Balancing reasoning";
+      return {
+        isCorrect: true,
+        shouldCount: true,
+        feedback: `Correct.\n\nAnswer: ${answerWithUnit(problem)}\n\n${reasoningLabel}:\n${problem.explanation}`
+      };
+    }
+
+    if (coefficientListIsScaledUp(studentCoefficients, correctCoefficients)) {
+      return {
+        isCorrect: false,
+        shouldCount: true,
+        feedback: `These coefficients are proportional to the balanced equation, but they are not the lowest whole-number set. Reduce ${formatCoefficientList(studentCoefficients)} to the smallest whole-number ratio.\n\nFirst hint: ${problem.firstHint}`
+      };
+    }
+
+    return {
+      isCorrect: false,
+      shouldCount: true,
+      feedback: `Not quite yet.\n\nCheck the atom counts on both sides of the arrow. Enter coefficients in this order: ${coefficientOrderText(problem)}.\nFirst hint: ${problem.firstHint}`
+    };
+  }
+
   function evaluateAnswer(problem, studentText) {
+    if (problem.answerType === "coefficients") {
+      return evaluateCoefficientAnswer(problem, studentText);
+    }
+
     const numberDetails = extractNumberDetails(studentText);
 
     if (!numberDetails) {
@@ -182,7 +290,7 @@
       return {
         isCorrect: true,
         shouldCount: true,
-        feedback: `Correct.\n\nAnswer: ${answerWithUnit(problem)}${sigFigFeedback(problem, studentAnswer, studentSigFigs)}\n\nDimensional-analysis reasoning:\n${problem.explanation}`
+        feedback: `Correct.\n\nAnswer: ${answerWithUnit(problem)}${sigFigFeedback(problem, studentAnswer, studentSigFigs)}\n\n${problem.reasoningLabel || "Dimensional-analysis reasoning"}:\n${problem.explanation}`
       };
     }
 
@@ -306,6 +414,8 @@
       answerWithUnit,
       countSignificantFiguresInText,
       evaluateAnswer,
+      formatCoefficientList,
+      parseCoefficientList,
       extractNumber,
       extractNumberDetails,
       formatNumber,
@@ -335,6 +445,8 @@
     countSignificantFiguresInText,
     createPracticeLogic,
     evaluateAnswer,
+    formatCoefficientList,
+    parseCoefficientList,
     extractNumber,
     extractNumberDetails,
     formatNumber,
@@ -344,3 +456,5 @@
     weightedRandomTopic
   };
 });
+
+

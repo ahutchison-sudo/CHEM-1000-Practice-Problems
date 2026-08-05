@@ -83,12 +83,11 @@
     problemTopic.textContent = `${state.currentProblem.practiceTopicName}: ${state.currentProblem.problemType}`;
     questionText.textContent = state.currentProblem.question;
     answerInput.value = "";
+    answerInput.placeholder = state.currentProblem.answerPlaceholder || "Example: 250 mg";
     answerInput.focus();
     updateAttemptText();
-    setFeedback(
-      "Enter your answer, then choose Check answer. You have two attempts for this problem. Units are welcome but not required.\n\nTip: arrange each relationship so the unwanted unit cancels and the requested unit remains.",
-      "neutral"
-    );
+    const startMessage = state.currentProblem.startMessage || "Enter your answer, then choose Check answer. You have two attempts for this problem. Units are welcome but not required.\n\nTip: arrange each relationship so the unwanted unit cancels and the requested unit remains.";
+    setFeedback(startMessage, "neutral");
   }
 
   function checkAnswer() {
@@ -137,7 +136,7 @@
     state.problemCompleted = true;
     state.completedCount += 1;
     setFeedback(
-      `Not quite. That was the second attempt for this problem.\n\n${result.feedback}\n\nAnswer: ${logic.answerWithUnit(state.currentProblem)}\n\nDimensional-analysis solution:\n${state.currentProblem.explanation}`,
+      `Not quite. That was the second attempt for this problem.\n\n${result.feedback}\n\nAnswer: ${logic.answerWithUnit(state.currentProblem)}\n\n${state.currentProblem.solutionLabel || "Dimensional-analysis solution"}:\n${state.currentProblem.explanation}`,
       "needs-work"
     );
     updateScore();
@@ -167,7 +166,7 @@
     }
 
     setFeedback(
-      `Answer: ${logic.answerWithUnit(state.currentProblem)}\n\nDimensional-analysis solution:\n${state.currentProblem.explanation}`,
+      `Answer: ${logic.answerWithUnit(state.currentProblem)}\n\n${state.currentProblem.solutionLabel || "Dimensional-analysis solution"}:\n${state.currentProblem.explanation}`,
       "neutral"
     );
   }
@@ -189,3 +188,4 @@
   updateScore();
   newProblem();
 })();
+

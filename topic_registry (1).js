@@ -1,4 +1,4 @@
-(function (root, factory) {
+﻿(function (root, factory) {
   const registry = factory(root);
 
   if (typeof module === "object" && module.exports) {
@@ -19,9 +19,13 @@
     ? require("./conversions.js")
     : root.ChemPracticeConversionTopic;
 
-  // Add future topic modules to this list. For example, a mole-conversions topic
-  // could be loaded in index.html and then added here after conversionTopic.
+  const balancingTopic = typeof require === "function"
+    ? require("./balancing.js")
+    : root.ChemPracticeBalancingTopic;
+
+  // Add future topic modules to this list after their script files are loaded.
   return [
-    conversionTopic
+    conversionTopic,
+    balancingTopic
   ];
 });
