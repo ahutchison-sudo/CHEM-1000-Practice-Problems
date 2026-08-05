@@ -23,9 +23,15 @@
     ? require("./balancing.js")
     : root.ChemPracticeBalancingTopic;
 
-  // Add future topic modules to this list after their script files are loaded.
+  const namingTopic = typeof require === "function"
+    ? require("./naming.js")
+    : root.ChemPracticeNamingTopic;
+
+  // Add future topic modules to this list after their script files are loaded
+  // in index.html. The order here is the order students see in the menu.
   return [
     conversionTopic,
-    balancingTopic
+    balancingTopic,
+    namingTopic
   ];
 });

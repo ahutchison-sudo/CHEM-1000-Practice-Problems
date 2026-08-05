@@ -32,12 +32,14 @@ Current topics:
 
 - Unit conversions and dosing
 - Balancing chemical reactions
+- Naming simple compounds
 
 A future structure could look like this:
 
 ```text
 topic_conversions.js
 topic_balancing.js
+topic_naming.js
 topic_moles.js
 topic_stoichiometry.js
 topic_solution_concentration.js

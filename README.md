@@ -39,7 +39,20 @@ This topic includes:
 - combustion reactions
 - other common reactions
 
-Students enter coefficients in order, such as `2, 1, 2`. The reaction bank is curated so the balanced coefficients are positive whole numbers and the largest coefficient is 15 or less.
+Students see formulas with proper visual subscripts, such as `Al₂O₃`, and enter coefficients in order, such as `2, 1, 2`. The reaction bank is curated so the balanced coefficients are positive whole numbers and the largest coefficient is 15 or less.
+
+### Naming simple compounds
+
+This topic includes:
+
+- random naming problem
+- fixed-charge ionic compounds
+- variable-charge ionic compounds that require Roman numerals
+- polyatomic ionic compounds using the course polyatomic ion list
+- diatomic elements
+- binary covalent compounds using Greek prefixes
+
+Students are given a formula and enter the compound name. Capitalization does not matter. Roman numerals are accepted in formats like `iron(III) chloride`, `iron III chloride`, or `iron 3 chloride`, while feedback shows the proper Roman numeral style.
 
 ## How To Try It
 
@@ -56,6 +69,7 @@ The app does not require Python, installation, accounts, or internet access when
 - `topic_registry.js` lists the available topic modules used by the hosted page.
 - `topic_conversions.js` contains the conversion and dosing problem generators.
 - `topic_balancing.js` contains the balancing chemical reactions problem generators.
+- `topic_naming.js` contains the simple compound naming problem generators.
 - `topics/` keeps organized source copies for future topic work.
 - `test_practice_logic.js` checks the important problem logic.
 - `ADDING_TOPICS.md` explains how future topic modules should be added.
@@ -79,6 +93,16 @@ If students choose `random balancing problem`, the app selects problem types wit
 - 25% double replacement and acid reactions
 - 25% combustion reactions
 - 10% other common reactions
+
+## Random Problem Mix For Naming Simple Compounds
+
+If students choose `random naming problem`, the app selects problem types with this distribution:
+
+- 25% fixed-charge ionic compounds
+- 20% variable-charge ionic compounds
+- 25% polyatomic ionic compounds
+- 10% diatomic elements
+- 20% binary covalent compounds
 
 ## Canvas Summary
 

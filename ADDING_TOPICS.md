@@ -4,10 +4,11 @@ This app is organized by topic. The shared shell stays the same, and each chemis
 
 ## Current Structure
 
-- `practice_shell.js` is the reusable shell. It checks answers, handles significant figures for numeric problems, gives feedback, and supports two attempts.
+- `practice_shell.js` is the reusable shell. It checks answers, handles significant figures for numeric problems, checks coefficient lists, checks text names, gives feedback, and supports two attempts.
 - `app.js` connects the shell to the web page.
 - `topic_conversions.js` is the unit conversions and dosing topic module used by the hosted page.
 - `topic_balancing.js` is the balancing chemical reactions topic module used by the hosted page.
+- `topic_naming.js` is the simple compound naming topic module used by the hosted page.
 - `topic_registry.js` lists which topic modules appear in the app.
 - `topics/` keeps organized source copies, but the live GitHub Pages version uses top-level topic files so uploading is simpler.
 
@@ -42,11 +43,24 @@ Balancing reactions use a coefficient-list answer instead of a single number. Th
 
 - `answerType: "coefficients"`
 - `coefficients`: the correct coefficient list, such as `[2, 1, 2]`
-- `coefficientLabels`: the formulas in order, such as `["H2", "O2", "H2O"]`
+- `coefficientLabels`: the formulas in order, such as `["H₂", "O₂", "H₂O"]`
 - `answerText`: the coefficient list and balanced equation shown in feedback
 - `firstHint`, `secondHint`, and `explanation`
 - `answerPlaceholder`, usually something like `Example: 2, 1, 2`
 - `startMessage`, which tells students to enter coefficients only
+
+## What A Text Naming Topic Module Provides
+
+Naming problems use a text answer instead of a number or coefficient list. Those generated problems should include:
+
+- `answerType: "text"`
+- `answerText`: the official name shown in feedback
+- `acceptedAnswers`: alternate names that should count as correct
+- `firstHint`, `secondHint`, and `explanation`
+- `answerPlaceholder`, usually something like `Example: sodium chloride`
+- `startMessage`, which tells students what kind of name to enter
+
+Text answers ignore capitalization and extra punctuation. Roman numerals are accepted in common formats, but the official feedback should show the proper Roman numeral style.
 
 ## Future Topic Examples
 
@@ -55,6 +69,7 @@ Future topic files could look like this:
 ```text
 topic_conversions.js
 topic_balancing.js
+topic_naming.js
 topic_moles.js
 topic_stoichiometry.js
 topic_solution_concentration.js

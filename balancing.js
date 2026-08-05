@@ -101,12 +101,51 @@
     };
   }
 
+  const SUBSCRIPT_DIGITS = {
+    "0": "\u2080",
+    "1": "\u2081",
+    "2": "\u2082",
+    "3": "\u2083",
+    "4": "\u2084",
+    "5": "\u2085",
+    "6": "\u2086",
+    "7": "\u2087",
+    "8": "\u2088",
+    "9": "\u2089"
+  };
+
+  function formulaForDisplay(formula) {
+    return formula.replace(/\d/g, (digit) => SUBSCRIPT_DIGITS[digit]);
+  }
+
+  function escapeRegExp(text) {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  function allFormulas(reactionData) {
+    return reactionData.reactants.concat(reactionData.products);
+  }
+
+  function hintForDisplay(hint, reactionData) {
+    let displayHint = hint;
+    const formulas = allFormulas(reactionData).slice().sort((a, b) => b.length - a.length);
+
+    for (const formula of formulas) {
+      displayHint = displayHint.replace(new RegExp(escapeRegExp(formula), "g"), formulaForDisplay(formula));
+    }
+
+    return displayHint;
+  }
+
   function unbalancedEquation(reactionData) {
-    return `${reactionData.reactants.join(" + ")} -> ${reactionData.products.join(" + ")}`;
+    const reactants = reactionData.reactants.map(formulaForDisplay).join(" + ");
+    const products = reactionData.products.map(formulaForDisplay).join(" + ");
+    return `${reactants} -> ${products}`;
   }
 
   function formulaWithCoefficient(coefficient, formula) {
-    return coefficient === 1 ? formula : `${coefficient} ${formula}`;
+    const displayFormula = formulaForDisplay(formula);
+    return coefficient === 1 ? displayFormula : `${coefficient} ${displayFormula}`;
   }
 
   function balancedEquation(reactionData) {
@@ -125,7 +164,7 @@
   }
 
   function coefficientLabels(reactionData) {
-    return reactionData.reactants.concat(reactionData.products);
+    return allFormulas(reactionData).map(formulaForDisplay);
   }
 
   function coefficientGuide(reactionData) {
@@ -148,7 +187,7 @@
       coefficientLabels: coefficientLabels(reactionData),
       answerText: `${answerList}\nBalanced equation: ${balanced}`,
       unit: "",
-      firstHint: reactionData.hint,
+      firstHint: hintForDisplay(reactionData.hint, reactionData),
       secondHint: `Use this coefficient order: ${guide}. Remember to enter 1 for any formula that does not need a visible coefficient.`,
       explanation: `Coefficients: ${answerList}\nBalanced equation: ${balanced}\n\nThe coefficient set is the smallest whole-number ratio, and each element has the same number of atoms on both sides of the equation.`,
       answerPlaceholder: "Example: 2, 1, 2",
@@ -171,4 +210,5 @@
     }
   };
 });
+
 

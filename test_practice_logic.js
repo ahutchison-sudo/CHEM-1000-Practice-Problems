@@ -35,9 +35,26 @@ function makeCoefficientProblem(overrides = {}) {
   };
 }
 
+function makeTextProblem(overrides = {}) {
+  return {
+    topic: "Naming test",
+    answerType: "text",
+    question: "Name this compound: FeCl3.",
+    answerText: "iron(III) chloride",
+    acceptedAnswers: ["iron(III) chloride"],
+    unit: "",
+    firstHint: "This metal needs a Roman numeral.",
+    secondHint: "Use the metal charge in Roman numerals.",
+    explanation: "Each chloride is -1, so iron is +3.",
+    reasoningLabel: "Naming reasoning",
+    ...overrides
+  };
+}
+
 const topicOptions = logic.getTopicOptions();
 assert.ok(topicOptions.some((topic) => topic.id === "unit-conversions-and-dosing"));
 assert.ok(topicOptions.some((topic) => topic.id === "balancing-chemical-reactions"));
+assert.ok(topicOptions.some((topic) => topic.id === "naming-simple-compounds"));
 
 const conversionProblemTypes = logic.getProblemTypeOptions("unit-conversions-and-dosing");
 assert.strictEqual(conversionProblemTypes[0].label, "random conversion problem");
@@ -49,6 +66,14 @@ assert.strictEqual(balancingProblemTypes[0].label, "random balancing problem");
 assert.ok(balancingProblemTypes.some((option) => option.label === "Combustion reactions"));
 assert.ok(balancingProblemTypes.some((option) => option.label === "Double replacement and acid reactions"));
 
+const namingProblemTypes = logic.getProblemTypeOptions("naming-simple-compounds");
+assert.strictEqual(namingProblemTypes[0].label, "random naming problem");
+assert.ok(namingProblemTypes.some((option) => option.label === "Fixed-charge ionic compounds"));
+assert.ok(namingProblemTypes.some((option) => option.label === "Polyatomic ionic compounds"));
+assert.ok(namingProblemTypes.some((option) => option.label === "Binary covalent compounds"));
+
+assert.strictEqual(logic.normalizeTextAnswer("Iron(III) chloride"), "iron iii chloride");
+assert.strictEqual(logic.normalizeTextAnswer("iron 3 chloride"), "iron iii chloride");
 assert.deepStrictEqual(logic.parseCoefficientList("2, 1, 2"), [2, 1, 2]);
 assert.deepStrictEqual(logic.parseCoefficientList("2 1 2"), [2, 1, 2]);
 
@@ -97,6 +122,26 @@ assert.strictEqual(result.isCorrect, false);
 assert.strictEqual(result.shouldCount, false);
 assert.ok(result.feedback.includes("coefficients, not the whole equation"));
 
+result = logic.evaluateAnswer(makeTextProblem(), "Iron III Chloride");
+assert.strictEqual(result.isCorrect, true);
+assert.strictEqual(result.shouldCount, true);
+assert.ok(result.feedback.includes("Naming reasoning"));
+
+result = logic.evaluateAnswer(makeTextProblem(), "iron 3 chloride");
+assert.strictEqual(result.isCorrect, true);
+assert.strictEqual(result.shouldCount, true);
+
+result = logic.evaluateAnswer(makeTextProblem({
+  answerText: "sodium hydrogen carbonate",
+  acceptedAnswers: ["sodium hydrogen carbonate", "sodium bicarbonate"]
+}), "sodium bicarbonate");
+assert.strictEqual(result.isCorrect, true);
+assert.strictEqual(result.shouldCount, true);
+
+result = logic.evaluateAnswer(makeTextProblem({ answerText: "carbon dioxide", acceptedAnswers: ["carbon dioxide"] }), "carbon oxide");
+assert.strictEqual(result.isCorrect, false);
+assert.strictEqual(result.shouldCount, true);
+
 assert.deepStrictEqual(Object.fromEntries(logic.RANDOM_PROBLEM_WEIGHTS), {
   "SI unit conversions": 15,
   "Imperial/SI conversions": 25,
@@ -134,6 +179,22 @@ assert.strictEqual(randomBalancingProblem.practiceTopicName, "Balancing chemical
 assert.strictEqual(randomBalancingProblem.answerType, "coefficients");
 assert.ok(randomBalancingProblem.coefficients.every((coefficient) => coefficient <= 15));
 assert.ok(randomBalancingProblem.question.includes("Balance this chemical equation"));
+assert.ok(/[\u2080-\u2089]/.test(randomBalancingProblem.question));
+assert.ok(/[\u2080-\u2089]/.test(randomBalancingProblem.answerText));
+
+const randomNamingProblem = logic.generateProblem("naming-simple-compounds", logic.RANDOM_PROBLEM_TYPE);
+assert.strictEqual(randomNamingProblem.practiceTopicName, "Naming simple compounds");
+assert.strictEqual(randomNamingProblem.answerType, "text");
+assert.ok(randomNamingProblem.question.includes("Name this"));
+assert.ok(randomNamingProblem.acceptedAnswers.includes(randomNamingProblem.answerText));
+
+for (const compounds of Object.values(logic.NAMING_PROBLEM_GROUPS)) {
+  for (const compound of compounds) {
+    assert.ok(compound.formula.length > 0);
+    assert.ok(compound.name.length > 0);
+    assert.ok(compound.acceptedAnswers.includes(compound.name));
+  }
+}
 
 for (const reactions of Object.values(logic.BALANCING_PROBLEM_GROUPS)) {
   for (const reaction of reactions) {
