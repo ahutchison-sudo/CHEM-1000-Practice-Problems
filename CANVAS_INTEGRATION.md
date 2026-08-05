@@ -1,0 +1,39 @@
+﻿# Canvas Integration Notes
+
+Canvas cannot embed the desktop Python version directly. This web version is designed to be hosted as ordinary static files, then added to a Canvas module as a web link.
+
+## Recommended First Path
+
+1. Put this entire folder on a static web host that provides an HTTPS URL.
+2. Open the hosted URL in a browser and confirm the app works.
+3. In Canvas, open the module for Chapter 1.
+4. Add an External URL item.
+5. Paste the hosted app URL.
+6. If your host allows embedding, leave `Load in a new tab` unchecked so the app appears inside the module page.
+7. If Canvas or the host blocks embedding, select `Load in a new tab` instead.
+
+## Hosting Options To Discuss With Cedarville IT
+
+- Cedarville-hosted course web space
+- an approved university static hosting service
+- GitHub Pages under a course or department account
+- another static host approved for student use
+- a future LTI tool if gradebook integration becomes necessary
+
+## Important Hosting Requirement
+
+The app runs fully in the student's browser. It does not store grades, names, or student answers on a server. That makes it simpler to host, but it also means Canvas will not automatically receive scores.
+
+## Future Chapter Apps
+
+For future chapters, keep the same interface files and make a new problem-logic file for each chapter. That gives students a familiar experience while letting each chapter practice different chemistry skills.
+
+A future structure could look like this:
+
+```text
+chapter-01-conversions/
+chapter-02-atoms-and-moles/
+chapter-03-stoichiometry/
+```
+
+Each chapter can use the same two-attempt and feedback style.

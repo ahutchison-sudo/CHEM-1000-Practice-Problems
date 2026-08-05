@@ -1,0 +1,66 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CHEM 1000 Conversion problem practice</title>
+  <meta name="description" content="Dimensional-analysis conversion practice for CHEM 1000.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="workspace" aria-labelledby="app-title">
+      <div class="topline">
+        <div>
+          <p class="course-label">Cedarville University CHEM 1000</p>
+          <h1 id="app-title">CHEM 1000 Conversion problem practice</h1>
+        </div>
+        <div class="score-panel" aria-live="polite">
+          <span class="score-label">Score</span>
+          <span id="scoreText" class="score-value">No completed problems yet.</span>
+        </div>
+      </div>
+
+      <div class="control-strip" aria-label="Problem controls">
+        <label class="field-label" for="topicSelect">Topic</label>
+        <select id="topicSelect"></select>
+        <button id="newProblemButton" type="button">New problem</button>
+        <button id="hintButton" type="button">Show hint</button>
+        <button id="solutionButton" type="button">Show solution</button>
+      </div>
+
+      <section class="problem-area" aria-labelledby="problemTopic">
+        <div class="problem-header">
+          <p id="problemTopic" class="problem-topic"></p>
+          <p id="attemptText" class="attempt-text"></p>
+        </div>
+        <p id="questionText" class="question-text"></p>
+
+        <div class="unit-path" aria-hidden="true">
+          <span>given unit</span>
+          <span class="path-line"></span>
+          <span>conversion factor</span>
+          <span class="path-line"></span>
+          <span>requested unit</span>
+        </div>
+
+        <form id="answerForm" class="answer-row">
+          <label class="field-label" for="answerInput">Your answer</label>
+          <input id="answerInput" autocomplete="off" inputmode="decimal" placeholder="Example: 250 mg">
+          <button type="submit">Check answer</button>
+        </form>
+      </section>
+
+      <section class="feedback-card" aria-labelledby="feedbackTitle">
+        <div class="feedback-heading">
+          <h2 id="feedbackTitle">Feedback</h2>
+        </div>
+        <div id="feedbackBox" class="feedback-box" aria-live="polite"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="practice_logic.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
