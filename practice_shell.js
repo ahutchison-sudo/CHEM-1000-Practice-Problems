@@ -133,6 +133,61 @@
     return problem.coefficientLabels.map((label, index) => `${index + 1}. ${label}`).join("; ");
   }
 
+  function normalizeTextAnswer(text) {
+    return String(text)
+      .toLowerCase()
+      .replace(/[\u2018\u2019]/g, "'")
+      .replace(/[\u201C\u201D]/g, '"')
+      .replace(/[\u2013\u2014]/g, "-")
+      .replace(/\((i|ii|iii|iv|v|vi|vii|viii|ix|x)\)/g, " $1 ")
+      .replace(/\b1\b/g, " i ")
+      .replace(/\b2\b/g, " ii ")
+      .replace(/\b3\b/g, " iii ")
+      .replace(/\b4\b/g, " iv ")
+      .replace(/\b5\b/g, " v ")
+      .replace(/\b6\b/g, " vi ")
+      .replace(/\b7\b/g, " vii ")
+      .replace(/\b8\b/g, " viii ")
+      .replace(/\b9\b/g, " ix ")
+      .replace(/\b10\b/g, " x ")
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim()
+      .replace(/\s+/g, " ");
+  }
+
+  function acceptedTextAnswers(problem) {
+    const answers = problem.acceptedAnswers && problem.acceptedAnswers.length > 0
+      ? problem.acceptedAnswers
+      : [problem.answerText];
+    return answers.map(normalizeTextAnswer);
+  }
+
+  function evaluateTextAnswer(problem, studentText) {
+    const normalizedStudentAnswer = normalizeTextAnswer(studentText);
+
+    if (!normalizedStudentAnswer) {
+      return {
+        isCorrect: false,
+        shouldCount: false,
+        feedback: "I could not find a compound name in that answer. Try entering a name like sodium chloride or carbon dioxide."
+      };
+    }
+
+    if (acceptedTextAnswers(problem).includes(normalizedStudentAnswer)) {
+      return {
+        isCorrect: true,
+        shouldCount: true,
+        feedback: `Correct.\n\nAnswer: ${answerWithUnit(problem)}\n\n${problem.reasoningLabel || "Naming reasoning"}:\n${problem.explanation}`
+      };
+    }
+
+    return {
+      isCorrect: false,
+      shouldCount: true,
+      feedback: `Not quite yet.\n\nCheck the naming path for this compound.\nFirst hint: ${problem.firstHint}`
+    };
+  }
+
   function extractNumberDetails(text) {
     const cleanText = String(text).replace(/,/g, "");
     const classroomScientific = cleanText.match(/([-+]?(?:\d+(?:\.\d*)?|\.\d+))\s*(?:x|\*)\s*10\s*(?:\^|\*\*)?\s*([-+]?\d+)/i);
@@ -269,6 +324,10 @@
   function evaluateAnswer(problem, studentText) {
     if (problem.answerType === "coefficients") {
       return evaluateCoefficientAnswer(problem, studentText);
+    }
+
+    if (problem.answerType === "text") {
+      return evaluateTextAnswer(problem, studentText);
     }
 
     const numberDetails = extractNumberDetails(studentText);
@@ -416,6 +475,7 @@
       evaluateAnswer,
       formatCoefficientList,
       parseCoefficientList,
+      normalizeTextAnswer,
       extractNumber,
       extractNumberDetails,
       formatNumber,
@@ -447,6 +507,7 @@
     evaluateAnswer,
     formatCoefficientList,
     parseCoefficientList,
+    normalizeTextAnswer,
     extractNumber,
     extractNumberDetails,
     formatNumber,
@@ -456,5 +517,7 @@
     weightedRandomTopic
   };
 });
+
+
 
 
