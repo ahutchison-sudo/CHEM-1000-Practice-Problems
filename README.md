@@ -36,8 +36,9 @@ The app does not require Python, installation, accounts, or internet access when
 - `styles.css` controls the appearance.
 - `app.js` connects the page buttons, menus, score, hints, and answer box.
 - `practice_shell.js` contains the shared answer-checking and practice-session behavior.
-- `topics/topic_registry.js` lists the available topic modules.
-- `topics/conversions.js` contains the current conversion and dosing problem generators.
+- `topic_registry.js` lists the available topic modules used by the hosted page.
+- `topic_conversions.js` contains the current conversion and dosing problem generators used by the hosted page.
+- `topics/` keeps organized source copies for future topic work.
 - `test_practice_logic.js` checks the important problem logic.
 - `ADDING_TOPICS.md` explains how future topic modules should be added.
 - `CANVAS_INTEGRATION.md` explains practical Canvas hosting options.
@@ -56,3 +57,4 @@ If students choose `random conversion problem`, the app selects problem types wi
 Canvas needs a web address, not a local file path. To use this app in a Canvas module, host this folder somewhere that provides an HTTPS link, then add that link to Canvas as an External URL module item.
 
 For early testing, GitHub Pages can host this static site. For production course use, Cedarville IT may have a preferred hosting location.
+

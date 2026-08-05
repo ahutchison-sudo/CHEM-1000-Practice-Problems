@@ -1,4 +1,4 @@
-﻿(function (root, factory) {
+(function (root, factory) {
   const registry = factory(root);
 
   if (typeof module === "object" && module.exports) {
@@ -16,7 +16,7 @@
   "use strict";
 
   const conversionTopic = typeof require === "function"
-    ? require("./topic_conversions.js")
+    ? require("./conversions.js")
     : root.ChemPracticeConversionTopic;
 
   // Add future topic modules to this list. For example, a mole-conversions topic

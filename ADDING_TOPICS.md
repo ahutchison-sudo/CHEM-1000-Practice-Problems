@@ -6,8 +6,9 @@ This app is organized by topic. The shared shell stays the same, and each chemis
 
 - `practice_shell.js` is the reusable shell. It checks answers, handles significant figures, gives feedback, and supports two attempts.
 - `app.js` connects the shell to the web page.
-- `topics/conversions.js` is the first topic module.
-- `topics/topic_registry.js` lists which topic modules appear in the app.
+- `topic_conversions.js` is the first topic module used by the hosted page.
+- `topic_registry.js` lists which topic modules appear in the app.
+- `topics/` keeps organized source copies, but the live GitHub Pages version uses top-level topic files so uploading is simpler.
 
 ## What A Topic Module Provides
 
@@ -39,14 +40,14 @@ Each generated problem should include:
 Future topic files could look like this:
 
 ```text
-topics/conversions.js
-topics/moles.js
-topics/stoichiometry.js
-topics/solution-concentration.js
-topics/gas-laws.js
+topic_conversions.js
+topic_moles.js
+topic_stoichiometry.js
+topic_solution_concentration.js
+topic_gas_laws.js
 ```
 
-Then `topics/topic_registry.js` would be updated so the new topic appears in the Practice topic menu.
+Then `topic_registry.js` would be updated so the new topic appears in the Practice topic menu.
 
 ## Suggested Next Topics
 
@@ -63,3 +64,4 @@ Good candidates for later CHEM 1000 practice modules might be:
 - gas laws
 
 The advantage of this structure is that students keep seeing the same interface, while the problem logic changes by topic.
+

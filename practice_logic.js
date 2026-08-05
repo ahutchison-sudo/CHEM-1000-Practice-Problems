@@ -5,7 +5,7 @@
 
   if (typeof module === "object" && module.exports) {
     const shell = require("./practice_shell.js");
-    const topicRegistry = require("./topics/topic_registry.js");
+    const topicRegistry = require("./topic_registry.js");
     logic = shell.createPracticeLogic(topicRegistry);
     module.exports = logic;
     return;
@@ -20,3 +20,4 @@
     root.ChemPracticeLogic = logic;
   }
 })(typeof globalThis !== "undefined" ? globalThis : window);
+
