@@ -9,6 +9,7 @@ This app is organized by topic. The shared shell stays the same, and each chemis
 - `topic_conversions.js` is the unit conversions and dosing topic module used by the hosted page.
 - `topic_balancing.js` is the balancing chemical reactions topic module used by the hosted page.
 - `topic_naming.js` is the simple compound naming topic module used by the hosted page.
+- `topic_stoichiometry.js` is the simple stoichiometry topic module used by the hosted page.
 - `topic_registry.js` lists which topic modules appear in the app.
 - `topics/` keeps organized source copies, but the live GitHub Pages version uses top-level topic files so uploading is simpler.
 
@@ -70,7 +71,6 @@ Future topic files could look like this:
 topic_conversions.js
 topic_balancing.js
 topic_naming.js
-topic_moles.js
 topic_stoichiometry.js
 topic_solution_concentration.js
 topic_gas_laws.js
@@ -87,9 +87,10 @@ Good candidates for later CHEM 1000 practice modules might be:
 - grams to moles and moles to grams
 - particles to moles and moles to particles
 - empirical formulas
-- stoichiometry
 - limiting reactants
 - molarity and solution dilution
 - gas laws
 
 The advantage of this structure is that students keep seeing the same interface, while the problem logic changes by topic.
+
+

@@ -55,6 +55,7 @@ const topicOptions = logic.getTopicOptions();
 assert.ok(topicOptions.some((topic) => topic.id === "unit-conversions-and-dosing"));
 assert.ok(topicOptions.some((topic) => topic.id === "balancing-chemical-reactions"));
 assert.ok(topicOptions.some((topic) => topic.id === "naming-simple-compounds"));
+assert.ok(topicOptions.some((topic) => topic.id === "simple-stoichiometry"));
 
 const conversionProblemTypes = logic.getProblemTypeOptions("unit-conversions-and-dosing");
 assert.strictEqual(conversionProblemTypes[0].label, "random conversion problem");
@@ -71,6 +72,13 @@ assert.strictEqual(namingProblemTypes[0].label, "random naming problem");
 assert.ok(namingProblemTypes.some((option) => option.label === "Fixed-charge ionic compounds"));
 assert.ok(namingProblemTypes.some((option) => option.label === "Polyatomic ionic compounds"));
 assert.ok(namingProblemTypes.some((option) => option.label === "Binary covalent compounds"));
+
+const stoichiometryProblemTypes = logic.getProblemTypeOptions("simple-stoichiometry");
+assert.strictEqual(stoichiometryProblemTypes[0].label, "random stoichiometry problem");
+assert.ok(stoichiometryProblemTypes.some((option) => option.label === "Molar mass from formula"));
+assert.ok(stoichiometryProblemTypes.some((option) => option.label === "Grams to moles"));
+assert.ok(stoichiometryProblemTypes.some((option) => option.label === "Moles to grams"));
+assert.ok(stoichiometryProblemTypes.some((option) => option.label === "Mass-to-mass stoichiometry"));
 
 assert.strictEqual(logic.normalizeTextAnswer("Iron(III) chloride"), "iron iii chloride");
 assert.strictEqual(logic.normalizeTextAnswer("iron 3 chloride"), "iron iii chloride");
@@ -188,6 +196,57 @@ assert.strictEqual(randomNamingProblem.answerType, "text");
 assert.ok(randomNamingProblem.question.includes("Name this"));
 assert.ok(randomNamingProblem.acceptedAnswers.includes(randomNamingProblem.answerText));
 
+const randomStoichiometryProblem = logic.generateProblem("simple-stoichiometry", logic.RANDOM_PROBLEM_TYPE);
+assert.strictEqual(randomStoichiometryProblem.practiceTopicName, "Simple stoichiometry");
+assert.strictEqual(typeof randomStoichiometryProblem.answer, "number");
+assert.ok(randomStoichiometryProblem.answerText.length > 0);
+assert.ok(randomStoichiometryProblem.firstHint.length > 0);
+assert.ok(randomStoichiometryProblem.secondHint.length > 0);
+assert.ok(randomStoichiometryProblem.explanation.length > 0);
+assert.ok(!randomStoichiometryProblem.explanation.includes("limiting reagent"));
+
+const expectedStoichiometryPlaceholderByUnit = {
+  "g/mol": "Example: 25.0 g/mol",
+  mol: "Example: 0.725 mol",
+  g: "Example: 25.0 g"
+};
+for (const problemType of ["Molar mass from formula", "Grams to moles", "Moles to grams", "Mass-to-mass stoichiometry"]) {
+  const problem = logic.generateProblem("simple-stoichiometry", problemType);
+  assert.strictEqual(problem.practiceTopicId, "simple-stoichiometry");
+  assert.strictEqual(problem.practiceTopicName, "Simple stoichiometry");
+  assert.strictEqual(problem.topic, problemType);
+  assert.strictEqual(typeof problem.answer, "number");
+  assert.ok(Number.isFinite(problem.answer));
+  assert.ok(problem.answer > 0);
+  assert.ok(problem.answerText.length > 0);
+  assert.ok(problem.expectedSigFigs >= 3);
+  assert.ok(problem.tolerance > 0);
+  assert.strictEqual(problem.answerPlaceholder, expectedStoichiometryPlaceholderByUnit[problem.unit]);
+}
+
+const molarMassProblem = logic.generateProblem("simple-stoichiometry", "Molar mass from formula");
+assert.strictEqual(molarMassProblem.unit, "g/mol");
+assert.ok(molarMassProblem.question.includes("Determine the molar mass"));
+
+const gramsToMolesProblem = logic.generateProblem("simple-stoichiometry", "Grams to moles");
+assert.strictEqual(gramsToMolesProblem.unit, "mol");
+assert.ok(gramsToMolesProblem.secondHint.includes("1 mol"));
+
+const molesToGramsProblem = logic.generateProblem("simple-stoichiometry", "Moles to grams");
+assert.strictEqual(molesToGramsProblem.unit, "g");
+assert.ok(molesToGramsProblem.secondHint.includes("g"));
+
+const massToMassProblem = logic.generateProblem("simple-stoichiometry", "Mass-to-mass stoichiometry");
+assert.strictEqual(massToMassProblem.unit, "g");
+assert.ok(massToMassProblem.question.includes("Use this balanced equation"));
+assert.ok(/[\u2080-\u2089]/.test(massToMassProblem.question));
+assert.ok(massToMassProblem.secondHint.includes("mol"));
+
+result = logic.evaluateAnswer(massToMassProblem, massToMassProblem.answerText);
+assert.strictEqual(result.isCorrect, true);
+assert.strictEqual(result.shouldCount, true);
+assert.ok(result.feedback.includes("Stoichiometry reasoning"));
+
 for (const compounds of Object.values(logic.NAMING_PROBLEM_GROUPS)) {
   for (const compound of compounds) {
     assert.ok(compound.formula.length > 0);
@@ -202,4 +261,22 @@ for (const reactions of Object.values(logic.BALANCING_PROBLEM_GROUPS)) {
   }
 }
 
+assert.deepStrictEqual(Object.fromEntries(logic.STOICHIOMETRY_RANDOM_PROBLEM_WEIGHTS), {
+  "Molar mass from formula": 20,
+  "Grams to moles": 20,
+  "Moles to grams": 20,
+  "Mass-to-mass stoichiometry": 40
+});
+assert.strictEqual(logic.STOICHIOMETRY_RANDOM_PROBLEM_WEIGHTS.reduce((sum, item) => sum + item[1], 0), 100);
+assert.ok(logic.STOICHIOMETRY_COMPOUNDS.length >= 12);
+assert.ok(logic.STOICHIOMETRY_REACTIONS.length >= 8);
+
+for (const compound of logic.STOICHIOMETRY_COMPOUNDS) {
+  assert.ok(compound.formula.length > 0);
+}
+
 console.log("All web app logic checks passed.");
+
+
+
+

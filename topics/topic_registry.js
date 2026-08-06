@@ -27,11 +27,18 @@
     ? require("./naming.js")
     : root.ChemPracticeNamingTopic;
 
+  const stoichiometryTopic = typeof require === "function"
+    ? require("./stoichiometry.js")
+    : root.ChemPracticeStoichiometryTopic;
+
   // Add future topic modules to this list after their script files are loaded
   // in index.html. The order here is the order students see in the menu.
   return [
     conversionTopic,
     balancingTopic,
-    namingTopic
+    namingTopic,
+    stoichiometryTopic
   ];
 });
+
+

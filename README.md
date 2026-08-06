@@ -54,6 +54,17 @@ This topic includes:
 
 Students are given a formula and enter the compound name. Capitalization does not matter. Roman numerals are accepted in formats like `iron(III) chloride`, `iron III chloride`, or `iron 3 chloride`, while feedback shows the proper Roman numeral style.
 
+### Simple stoichiometry
+
+This topic includes:
+
+- random stoichiometry problem
+- molar mass from formula
+- grams to moles
+- moles to grams
+- mass-to-mass stoichiometry from a balanced equation
+
+Students practice using molar mass and balanced-equation mole ratios. The app does not generate limiting reagent, gas volume, or concentration problems in this topic.
 ## How To Try It
 
 Open `index.html` in a web browser.
@@ -70,6 +81,7 @@ The app does not require Python, installation, accounts, or internet access when
 - `topic_conversions.js` contains the conversion and dosing problem generators.
 - `topic_balancing.js` contains the balancing chemical reactions problem generators.
 - `topic_naming.js` contains the simple compound naming problem generators.
+- `topic_stoichiometry.js` contains the molar mass and stoichiometry problem generators.
 - `topics/` keeps organized source copies for future topic work.
 - `test_practice_logic.js` checks the important problem logic.
 - `ADDING_TOPICS.md` explains how future topic modules should be added.
@@ -104,8 +116,19 @@ If students choose `random naming problem`, the app selects problem types with t
 - 10% diatomic elements
 - 20% binary covalent compounds
 
+## Random Problem Mix For Simple Stoichiometry
+
+If students choose `random stoichiometry problem`, the app selects problem types with this distribution:
+
+- 20% molar mass from formula
+- 20% grams to moles
+- 20% moles to grams
+- 40% mass-to-mass stoichiometry
+
 ## Canvas Summary
 
 Canvas needs a web address, not a local file path. To use this app in a Canvas module, host this folder somewhere that provides an HTTPS link, then add that link to Canvas as an External URL module item.
 
 For early testing, GitHub Pages can host this static site. For production course use, Cedarville IT may have a preferred hosting location.
+
+
