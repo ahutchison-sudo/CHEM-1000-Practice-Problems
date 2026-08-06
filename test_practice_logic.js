@@ -1,4 +1,4 @@
-﻿const assert = require("assert");
+const assert = require("assert");
 const logic = require("./practice_logic.js");
 
 function makeNumericProblem(overrides = {}) {
@@ -56,6 +56,7 @@ assert.ok(topicOptions.some((topic) => topic.id === "unit-conversions-and-dosing
 assert.ok(topicOptions.some((topic) => topic.id === "balancing-chemical-reactions"));
 assert.ok(topicOptions.some((topic) => topic.id === "naming-simple-compounds"));
 assert.ok(topicOptions.some((topic) => topic.id === "simple-stoichiometry"));
+assert.ok(topicOptions.some((topic) => topic.id === "organic-alkane-naming"));
 
 const conversionProblemTypes = logic.getProblemTypeOptions("unit-conversions-and-dosing");
 assert.strictEqual(conversionProblemTypes[0].label, "random conversion problem");
@@ -79,6 +80,12 @@ assert.ok(stoichiometryProblemTypes.some((option) => option.label === "Molar mas
 assert.ok(stoichiometryProblemTypes.some((option) => option.label === "Grams to moles"));
 assert.ok(stoichiometryProblemTypes.some((option) => option.label === "Moles to grams"));
 assert.ok(stoichiometryProblemTypes.some((option) => option.label === "Mass-to-mass stoichiometry"));
+const organicProblemTypes = logic.getProblemTypeOptions("organic-alkane-naming");
+assert.strictEqual(organicProblemTypes[0].label, "random organic naming problem");
+assert.ok(organicProblemTypes.some((option) => option.label === "Alkyl substituents"));
+assert.ok(organicProblemTypes.some((option) => option.label === "Halogen substituents"));
+assert.ok(organicProblemTypes.some((option) => option.label === "Mixed substituents"));
+assert.ok(organicProblemTypes.some((option) => option.label === "Common branched substituents"));
 
 assert.strictEqual(logic.normalizeTextAnswer("Iron(III) chloride"), "iron iii chloride");
 assert.strictEqual(logic.normalizeTextAnswer("iron 3 chloride"), "iron iii chloride");
@@ -246,6 +253,72 @@ result = logic.evaluateAnswer(massToMassProblem, massToMassProblem.answerText);
 assert.strictEqual(result.isCorrect, true);
 assert.strictEqual(result.shouldCount, true);
 assert.ok(result.feedback.includes("Stoichiometry reasoning"));
+const randomOrganicProblem = logic.generateProblem("organic-alkane-naming", logic.RANDOM_PROBLEM_TYPE);
+assert.strictEqual(randomOrganicProblem.practiceTopicName, "Naming organic alkanes");
+assert.strictEqual(randomOrganicProblem.answerType, "text");
+assert.ok(randomOrganicProblem.questionHtml.includes("<svg"));
+assert.ok(randomOrganicProblem.questionHtml.includes("organic-structure"));
+assert.ok(randomOrganicProblem.answerText.length > 0);
+assert.ok(randomOrganicProblem.acceptedAnswers.includes(randomOrganicProblem.answerText));
+assert.strictEqual(randomOrganicProblem.answerPlaceholder, "Example: 4-ethylheptane");
+assert.ok(["skeletal", "expanded"].includes(randomOrganicProblem.drawingStyle));
+assert.ok(["standard", "folded"].includes(randomOrganicProblem.drawingLayout));
+assert.ok(!randomOrganicProblem.questionHtml.includes(randomOrganicProblem.answerText));
+
+result = logic.evaluateAnswer(randomOrganicProblem, randomOrganicProblem.answerText.toUpperCase());
+assert.strictEqual(result.isCorrect, true);
+assert.strictEqual(result.shouldCount, true);
+assert.ok(result.feedback.includes("Organic naming reasoning"));
+
+result = logic.evaluateAnswer(randomOrganicProblem, randomOrganicProblem.answerText.replace(/,/g, " ").replace(/-/g, " "));
+assert.strictEqual(result.isCorrect, true);
+assert.strictEqual(result.shouldCount, true);
+
+const originalMathRandom = Math.random;
+let forcedOrganicProblem;
+try {
+  Math.random = () => 0.1;
+  forcedOrganicProblem = logic.generateProblem("organic-alkane-naming", "Common branched substituents");
+} finally {
+  Math.random = originalMathRandom;
+}
+assert.strictEqual(forcedOrganicProblem.drawingStyle, "expanded");
+assert.strictEqual(forcedOrganicProblem.drawingLayout, "folded");
+assert.ok(forcedOrganicProblem.questionHtml.includes('data-style="expanded"'));
+assert.ok(forcedOrganicProblem.questionHtml.includes('data-layout="folded"'));
+assert.ok(forcedOrganicProblem.questionHtml.includes("<text"));
+assert.ok(forcedOrganicProblem.questionHtml.includes("CH"));
+
+let forcedSkeletalProblem;
+try {
+  Math.random = () => 0.9;
+  forcedSkeletalProblem = logic.generateProblem("organic-alkane-naming", "Common branched substituents");
+} finally {
+  Math.random = originalMathRandom;
+}
+assert.strictEqual(forcedSkeletalProblem.drawingStyle, "skeletal");
+assert.ok(forcedSkeletalProblem.questionHtml.includes('data-style="skeletal"'));
+const skeletalBondMatches = [...forcedSkeletalProblem.questionHtml.matchAll(/<line x1="([^"]+)" y1="([^"]+)" x2="([^"]+)" y2="([^"]+)"/g)];
+const skeletalEndpoints = new Map();
+for (const match of skeletalBondMatches) {
+  const firstEndpoint = match[1] + "," + match[2];
+  const secondEndpoint = match[3] + "," + match[4];
+  skeletalEndpoints.set(firstEndpoint, (skeletalEndpoints.get(firstEndpoint) || 0) + 1);
+  skeletalEndpoints.set(secondEndpoint, (skeletalEndpoints.get(secondEndpoint) || 0) + 1);
+}
+assert.ok([...skeletalEndpoints.values()].some((count) => count >= 2));
+
+for (const problemType of ["Alkyl substituents", "Halogen substituents", "Mixed substituents", "Common branched substituents"]) {
+  const problem = logic.generateProblem("organic-alkane-naming", problemType);
+  assert.strictEqual(problem.practiceTopicId, "organic-alkane-naming");
+  assert.strictEqual(problem.practiceTopicName, "Naming organic alkanes");
+  assert.strictEqual(problem.topic, problemType);
+  assert.strictEqual(problem.answerType, "text");
+  assert.ok(problem.questionHtml.includes("<svg"));
+  assert.ok(["skeletal", "expanded"].includes(problem.drawingStyle));
+  assert.ok(["standard", "folded"].includes(problem.drawingLayout));
+  assert.ok(problem.acceptedAnswers.includes(problem.answerText));
+}
 
 for (const compounds of Object.values(logic.NAMING_PROBLEM_GROUPS)) {
   for (const compound of compounds) {
@@ -274,8 +347,45 @@ assert.ok(logic.STOICHIOMETRY_REACTIONS.length >= 8);
 for (const compound of logic.STOICHIOMETRY_COMPOUNDS) {
   assert.ok(compound.formula.length > 0);
 }
+assert.deepStrictEqual(Object.fromEntries(logic.ORGANIC_NAMING_RANDOM_PROBLEM_WEIGHTS), {
+  "Alkyl substituents": 30,
+  "Halogen substituents": 25,
+  "Mixed substituents": 25,
+  "Common branched substituents": 20
+});
+assert.strictEqual(logic.ORGANIC_NAMING_RANDOM_PROBLEM_WEIGHTS.reduce((sum, item) => sum + item[1], 0), 100);
+assert.strictEqual(logic.ORGANIC_NAMING_CHALLENGE_LAYOUT_PROBABILITY, 0.5);
+assert.strictEqual(logic.ORGANIC_NAMING_EXPANDED_DRAWING_PROBABILITY, 0.5);
+
+const allOrganicMolecules = Object.values(logic.ORGANIC_NAMING_PROBLEM_GROUPS).flat();
+assert.ok(allOrganicMolecules.length >= 40);
+assert.ok(allOrganicMolecules.some((item) => item.answerText.includes("isopropyl")));
+assert.ok(allOrganicMolecules.some((item) => item.answerText.includes("isobutyl")));
+assert.ok(allOrganicMolecules.some((item) => item.answerText.includes("sec-butyl")));
+assert.ok(allOrganicMolecules.some((item) => item.answerText.includes("tert-butyl")));
+assert.ok(allOrganicMolecules.some((item) => item.answerText.includes("fluoro")));
+assert.ok(allOrganicMolecules.some((item) => item.answerText.includes("chloro")));
+assert.ok(allOrganicMolecules.some((item) => item.answerText.includes("bromo")));
+assert.ok(allOrganicMolecules.some((item) => item.answerText.includes("iodo")));
+
+const tertButylMolecule = allOrganicMolecules.find((item) => item.answerText.includes("tert-butyl"));
+result = logic.evaluateAnswer({
+  answerType: "text",
+  answerText: tertButylMolecule.answerText,
+  acceptedAnswers: tertButylMolecule.acceptedAnswers,
+  unit: "",
+  firstHint: "",
+  explanation: "",
+  reasoningLabel: "Organic naming reasoning"
+}, tertButylMolecule.answerText.replace("tert-butyl", "tertbutyl"));
+assert.strictEqual(result.isCorrect, true);
+assert.strictEqual(result.shouldCount, true);
 
 console.log("All web app logic checks passed.");
+
+
+
+
 
 
 

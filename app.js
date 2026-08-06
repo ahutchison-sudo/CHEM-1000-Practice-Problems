@@ -74,6 +74,17 @@
     attemptText.textContent = `Attempt ${nextAttempt} of 2`;
   }
 
+  function renderQuestion(problem) {
+    questionText.classList.toggle("has-visual", Boolean(problem.questionHtml));
+
+    if (problem.questionHtml) {
+      questionText.innerHTML = problem.questionHtml;
+      return;
+    }
+
+    questionText.textContent = problem.question;
+  }
+
   function newProblem() {
     state.currentProblem = logic.generateProblem(topicSelect.value, problemTypeSelect.value);
     state.problemCompleted = false;
@@ -81,7 +92,7 @@
     state.hintCount = 0;
 
     problemTopic.textContent = `${state.currentProblem.practiceTopicName}: ${state.currentProblem.problemType}`;
-    questionText.textContent = state.currentProblem.question;
+    renderQuestion(state.currentProblem);
     answerInput.value = "";
     answerInput.placeholder = state.currentProblem.answerPlaceholder || "Example: 250 mg";
     answerInput.focus();
@@ -188,4 +199,5 @@
   updateScore();
   newProblem();
 })();
+
 

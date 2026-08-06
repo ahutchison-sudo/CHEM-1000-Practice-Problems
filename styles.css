@@ -310,3 +310,47 @@ input {
 
 
 
+
+.question-text.has-visual {
+  white-space: normal;
+}
+
+.organic-question {
+  display: grid;
+  gap: 14px;
+}
+
+.organic-question p {
+  margin-bottom: 0;
+}
+
+.structure-panel {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  padding: 10px;
+}
+
+.organic-structure {
+  display: block;
+  width: min(100%, 720px);
+  height: auto;
+  margin: 0 auto;
+}
+
+.organic-structure line {
+  stroke: var(--ink);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.organic-structure text {
+  fill: var(--ink);
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}

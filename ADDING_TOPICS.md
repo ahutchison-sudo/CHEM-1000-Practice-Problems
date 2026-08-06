@@ -10,6 +10,7 @@ This app is organized by topic. The shared shell stays the same, and each chemis
 - `topic_balancing.js` is the balancing chemical reactions topic module used by the hosted page.
 - `topic_naming.js` is the simple compound naming topic module used by the hosted page.
 - `topic_stoichiometry.js` is the simple stoichiometry topic module used by the hosted page.
+- `topic_organic_naming.js` is the substituted alkane naming topic module used by the hosted page.
 - `topic_registry.js` lists which topic modules appear in the app.
 - `topics/` keeps organized source copies, but the live GitHub Pages version uses top-level topic files so uploading is simpler.
 
@@ -63,6 +64,11 @@ Naming problems use a text answer instead of a number or coefficient list. Those
 
 Text answers ignore capitalization and extra punctuation. Roman numerals are accepted in common formats, but the official feedback should show the proper Roman numeral style.
 
+
+## Topics With Structure Drawings
+
+Organic naming problems include a `questionHtml` value so the app can display an SVG structure drawing. The drawing is generated from the same structured molecule data that produces the answer, which keeps the image and correct name matched. The organic topic can draw skeletal or expanded structures, and some eligible molecules use a folded layout so the longest chain is not the most obvious horizontal path.
+
 ## Future Topic Examples
 
 Future topic files could look like this:
@@ -72,6 +78,7 @@ topic_conversions.js
 topic_balancing.js
 topic_naming.js
 topic_stoichiometry.js
+topic_organic_naming.js
 topic_solution_concentration.js
 topic_gas_laws.js
 ```
@@ -92,5 +99,8 @@ Good candidates for later CHEM 1000 practice modules might be:
 - gas laws
 
 The advantage of this structure is that students keep seeing the same interface, while the problem logic changes by topic.
+
+
+
 
 

@@ -65,6 +65,18 @@ This topic includes:
 - mass-to-mass stoichiometry from a balanced equation
 
 Students practice using molar mass and balanced-equation mole ratios. The app does not generate limiting reagent, gas volume, or concentration problems in this topic.
+
+### Naming organic alkanes
+
+This topic includes:
+
+- random organic naming problem
+- alkyl substituents
+- halogen substituents
+- mixed substituents
+- common branched substituents
+
+Students are shown either a skeletal line-angle structure or an expanded structure and enter the organic compound name. Some eligible structures are intentionally drawn in a folded layout so the longest continuous chain is not simply the most horizontal path. This controlled version uses acyclic substituted alkanes only: no rings, no double or triple bonds, no stereochemistry, and no functional groups beyond the listed alkyl and halogen substituents. Common substituent names such as isopropyl, sec-butyl, and tert-butyl are accepted.
 ## How To Try It
 
 Open `index.html` in a web browser.
@@ -82,6 +94,7 @@ The app does not require Python, installation, accounts, or internet access when
 - `topic_balancing.js` contains the balancing chemical reactions problem generators.
 - `topic_naming.js` contains the simple compound naming problem generators.
 - `topic_stoichiometry.js` contains the molar mass and stoichiometry problem generators.
+- `topic_organic_naming.js` contains the substituted alkane naming problem generators and structure drawings.
 - `topics/` keeps organized source copies for future topic work.
 - `test_practice_logic.js` checks the important problem logic.
 - `ADDING_TOPICS.md` explains how future topic modules should be added.
@@ -125,10 +138,22 @@ If students choose `random stoichiometry problem`, the app selects problem types
 - 20% moles to grams
 - 40% mass-to-mass stoichiometry
 
+## Random Problem Mix For Naming Organic Alkanes
+
+If students choose `random organic naming problem`, the app selects problem types with this distribution:
+
+- 30% alkyl substituents
+- 25% halogen substituents
+- 25% mixed substituents
+- 20% common branched substituents
 ## Canvas Summary
 
 Canvas needs a web address, not a local file path. To use this app in a Canvas module, host this folder somewhere that provides an HTTPS link, then add that link to Canvas as an External URL module item.
 
 For early testing, GitHub Pages can host this static site. For production course use, Cedarville IT may have a preferred hosting location.
+
+
+
+
 
 

@@ -34,6 +34,7 @@ Current topics:
 - Balancing chemical reactions
 - Naming simple compounds
 - Simple stoichiometry
+- Naming organic alkanes
 
 A future structure could look like this:
 
@@ -42,10 +43,12 @@ topic_conversions.js
 topic_balancing.js
 topic_naming.js
 topic_stoichiometry.js
+topic_organic_naming.js
 topic_solution_concentration.js
 topic_gas_laws.js
 ```
 
 Each topic can use the same two-attempt and feedback style.
+
 
 

@@ -31,14 +31,20 @@
     ? require("./stoichiometry.js")
     : root.ChemPracticeStoichiometryTopic;
 
+  const organicNamingTopic = typeof require === "function"
+    ? require("./organic_naming.js")
+    : root.ChemPracticeOrganicNamingTopic;
+
   // Add future topic modules to this list after their script files are loaded
   // in index.html. The order here is the order students see in the menu.
   return [
     conversionTopic,
     balancingTopic,
     namingTopic,
-    stoichiometryTopic
+    stoichiometryTopic,
+    organicNamingTopic
   ];
 });
+
 
 
