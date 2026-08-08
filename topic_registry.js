@@ -35,6 +35,10 @@
     ? require("./topic_organic_naming.js")
     : root.ChemPracticeOrganicNamingTopic;
 
+  const chemicalReactionsTopic = typeof require === "function"
+    ? require("./topic_chemical_reactions.js")
+    : root.ChemPracticeChemicalReactionsTopic;
+
   // Add future topic modules to this list after their script files are loaded
   // in index.html. The order here is the order students see in the menu.
   return [
@@ -42,7 +46,8 @@
     balancingTopic,
     namingTopic,
     stoichiometryTopic,
-    organicNamingTopic
+    organicNamingTopic,
+    chemicalReactionsTopic
   ];
 });
 

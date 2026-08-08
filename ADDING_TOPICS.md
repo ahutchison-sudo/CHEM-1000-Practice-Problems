@@ -11,6 +11,7 @@ This app is organized by topic. The shared shell stays the same, and each chemis
 - `topic_naming.js` is the simple compound naming topic module used by the hosted page.
 - `topic_stoichiometry.js` is the simple stoichiometry topic module used by the hosted page.
 - `topic_organic_naming.js` is the substituted alkane naming topic module used by the hosted page.
+- `topic_chemical_reactions.js` is the chemical reactions multiple-choice topic module used by the hosted page.
 - `topic_registry.js` lists which topic modules appear in the app.
 - `topics/` keeps organized source copies, but the live GitHub Pages version uses top-level topic files so uploading is simpler.
 
@@ -64,6 +65,18 @@ Naming problems use a text answer instead of a number or coefficient list. Those
 
 Text answers ignore capitalization and extra punctuation. Roman numerals are accepted in common formats, but the official feedback should show the proper Roman numeral style.
 
+## What A Multiple-Choice Topic Module Provides
+
+Multiple-choice problems should include:
+
+- `answerType: "multiple-choice"`
+- `choices`: answer choices with `id`, `label`, `text`, and optional `html`
+- `answerChoiceId`: the `id` for the correct choice
+- `answerText`: the answer shown in feedback
+- `firstHint`, `secondHint`, and `explanation`
+
+The shared app displays the choices as radio buttons and keeps the same two-attempt behavior.
+
 
 ## Topics With Structure Drawings
 
@@ -79,6 +92,7 @@ topic_balancing.js
 topic_naming.js
 topic_stoichiometry.js
 topic_organic_naming.js
+topic_chemical_reactions.js
 topic_solution_concentration.js
 topic_gas_laws.js
 ```

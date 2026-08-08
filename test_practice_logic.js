@@ -51,12 +51,34 @@ function makeTextProblem(overrides = {}) {
   };
 }
 
+function makeMultipleChoiceProblem(overrides = {}) {
+  return {
+    topic: "Reaction test",
+    answerType: "multiple-choice",
+    question: "Classify this reaction.",
+    choices: [
+      { id: "choice-1", label: "A.", text: "A dehydration reaction" },
+      { id: "choice-2", label: "B.", text: "A hydration reaction" },
+      { id: "choice-3", label: "C.", text: "A double displacement reaction" }
+    ],
+    answerChoiceId: "choice-2",
+    answerText: "A hydration reaction",
+    unit: "",
+    firstHint: "Look for water adding across a double bond.",
+    secondHint: "Hydration adds H and OH.",
+    explanation: "Water adds across the alkene.",
+    reasoningLabel: "Reaction reasoning",
+    ...overrides
+  };
+}
+
 const topicOptions = logic.getTopicOptions();
 assert.ok(topicOptions.some((topic) => topic.id === "unit-conversions-and-dosing"));
 assert.ok(topicOptions.some((topic) => topic.id === "balancing-chemical-reactions"));
 assert.ok(topicOptions.some((topic) => topic.id === "naming-simple-compounds"));
 assert.ok(topicOptions.some((topic) => topic.id === "simple-stoichiometry"));
 assert.ok(topicOptions.some((topic) => topic.id === "organic-alkane-naming"));
+assert.ok(topicOptions.some((topic) => topic.id === "chemical-reactions"));
 
 const conversionProblemTypes = logic.getProblemTypeOptions("unit-conversions-and-dosing");
 assert.strictEqual(conversionProblemTypes[0].label, "random conversion problem");
@@ -86,6 +108,11 @@ assert.ok(organicProblemTypes.some((option) => option.label === "Alkyl substitue
 assert.ok(organicProblemTypes.some((option) => option.label === "Halogen substituents"));
 assert.ok(organicProblemTypes.some((option) => option.label === "Mixed substituents"));
 assert.ok(organicProblemTypes.some((option) => option.label === "Common branched substituents"));
+
+const chemicalReactionProblemTypes = logic.getProblemTypeOptions("chemical-reactions");
+assert.strictEqual(chemicalReactionProblemTypes[0].label, "random chemical reactions problem");
+assert.ok(chemicalReactionProblemTypes.some((option) => option.label === "Identify reaction type"));
+assert.ok(chemicalReactionProblemTypes.some((option) => option.label === "Predict products"));
 
 assert.strictEqual(logic.normalizeTextAnswer("Iron(III) chloride"), "iron iii chloride");
 assert.strictEqual(logic.normalizeTextAnswer("iron 3 chloride"), "iron iii chloride");
@@ -156,6 +183,21 @@ assert.strictEqual(result.shouldCount, true);
 result = logic.evaluateAnswer(makeTextProblem({ answerText: "carbon dioxide", acceptedAnswers: ["carbon dioxide"] }), "carbon oxide");
 assert.strictEqual(result.isCorrect, false);
 assert.strictEqual(result.shouldCount, true);
+
+result = logic.evaluateAnswer(makeMultipleChoiceProblem(), "");
+assert.strictEqual(result.isCorrect, false);
+assert.strictEqual(result.shouldCount, false);
+assert.ok(result.feedback.includes("Choose one answer"));
+
+result = logic.evaluateAnswer(makeMultipleChoiceProblem(), "choice-2");
+assert.strictEqual(result.isCorrect, true);
+assert.strictEqual(result.shouldCount, true);
+assert.ok(result.feedback.includes("Reaction reasoning"));
+
+result = logic.evaluateAnswer(makeMultipleChoiceProblem(), "choice-1");
+assert.strictEqual(result.isCorrect, false);
+assert.strictEqual(result.shouldCount, true);
+assert.ok(result.feedback.includes("First hint"));
 
 assert.deepStrictEqual(Object.fromEntries(logic.RANDOM_PROBLEM_WEIGHTS), {
   "SI unit conversions": 15,
@@ -320,6 +362,36 @@ for (const problemType of ["Alkyl substituents", "Halogen substituents", "Mixed 
   assert.ok(problem.acceptedAnswers.includes(problem.answerText));
 }
 
+const randomChemicalReactionProblem = logic.generateProblem("chemical-reactions", logic.RANDOM_PROBLEM_TYPE);
+assert.strictEqual(randomChemicalReactionProblem.practiceTopicName, "Chemical Reactions");
+assert.strictEqual(randomChemicalReactionProblem.answerType, "multiple-choice");
+assert.ok(randomChemicalReactionProblem.questionHtml.includes("reaction-equation"));
+assert.ok(randomChemicalReactionProblem.choices.length >= 5);
+assert.ok(randomChemicalReactionProblem.choices.some((choice) => choice.id === randomChemicalReactionProblem.answerChoiceId));
+assert.ok(randomChemicalReactionProblem.answerText.length > 0);
+assert.ok(randomChemicalReactionProblem.firstHint.length > 0);
+assert.ok(randomChemicalReactionProblem.secondHint.length > 0);
+assert.ok(randomChemicalReactionProblem.explanation.length > 0);
+
+result = logic.evaluateAnswer(randomChemicalReactionProblem, randomChemicalReactionProblem.answerChoiceId);
+assert.strictEqual(result.isCorrect, true);
+assert.strictEqual(result.shouldCount, true);
+assert.ok(result.feedback.includes("Reaction"));
+
+for (const problemType of ["Identify reaction type", "Predict products"]) {
+  const problem = logic.generateProblem("chemical-reactions", problemType);
+  assert.strictEqual(problem.practiceTopicId, "chemical-reactions");
+  assert.strictEqual(problem.practiceTopicName, "Chemical Reactions");
+  assert.strictEqual(problem.topic, problemType);
+  assert.strictEqual(problem.answerType, "multiple-choice");
+  assert.ok(problem.questionHtml.includes("reaction-equation"));
+  assert.ok(problem.questionHtml.includes("&rarr;"));
+  assert.ok(problem.choices.every((choice) => choice.id && choice.label && choice.html));
+  assert.ok(problem.choices.some((choice) => choice.id === problem.answerChoiceId));
+  assert.ok(problem.choices.some((choice) => choice.text === problem.answerText));
+  assert.strictEqual(problem.choices.length, problemType === "Predict products" ? 5 : 6);
+}
+
 for (const compounds of Object.values(logic.NAMING_PROBLEM_GROUPS)) {
   for (const compound of compounds) {
     assert.ok(compound.formula.length > 0);
@@ -367,6 +439,24 @@ assert.ok(allOrganicMolecules.some((item) => item.answerText.includes("fluoro"))
 assert.ok(allOrganicMolecules.some((item) => item.answerText.includes("chloro")));
 assert.ok(allOrganicMolecules.some((item) => item.answerText.includes("bromo")));
 assert.ok(allOrganicMolecules.some((item) => item.answerText.includes("iodo")));
+
+assert.deepStrictEqual(Object.fromEntries(logic.CHEMICAL_REACTION_RANDOM_PROBLEM_WEIGHTS), {
+  "Identify reaction type": 50,
+  "Predict products": 50
+});
+assert.strictEqual(logic.CHEMICAL_REACTION_RANDOM_PROBLEM_WEIGHTS.reduce((sum, item) => sum + item[1], 0), 100);
+assert.deepStrictEqual(logic.CHEMICAL_REACTION_TYPES, [
+  "Dehydration",
+  "Hydrolysis",
+  "Double displacement",
+  "Hydrogenation of an alkene",
+  "Hydration of an alkene",
+  "Hydrohalogenation of an alkene"
+]);
+assert.ok(logic.CHEMICAL_REACTION_PROBLEM_GROUPS["Identify reaction type"].length >= 12);
+assert.ok(logic.CHEMICAL_REACTION_PROBLEM_GROUPS["Predict products"].length >= 12);
+assert.ok(logic.CHEMICAL_REACTION_PROBLEM_GROUPS["Predict products"].some((item) => item.reactionType === "Hydration of an alkene"));
+assert.ok(logic.CHEMICAL_REACTION_PROBLEM_GROUPS["Predict products"].some((item) => item.reactionType === "Hydrohalogenation of an alkene"));
 
 const tertButylMolecule = allOrganicMolecules.find((item) => item.answerText.includes("tert-butyl"));
 result = logic.evaluateAnswer({

@@ -35,6 +35,7 @@ Current topics:
 - Naming simple compounds
 - Simple stoichiometry
 - Naming organic alkanes
+- Chemical Reactions
 
 A future structure could look like this:
 
@@ -44,6 +45,7 @@ topic_balancing.js
 topic_naming.js
 topic_stoichiometry.js
 topic_organic_naming.js
+topic_chemical_reactions.js
 topic_solution_concentration.js
 topic_gas_laws.js
 ```

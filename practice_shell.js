@@ -188,6 +188,43 @@
     };
   }
 
+  function selectedChoice(problem, studentText) {
+    const submittedChoice = String(studentText).trim();
+    return (problem.choices || []).find((choice) => (
+      choice.id === submittedChoice ||
+      choice.label === submittedChoice ||
+      choice.text === submittedChoice
+    ));
+  }
+
+  function evaluateMultipleChoiceAnswer(problem, studentText) {
+    const choice = selectedChoice(problem, studentText);
+
+    if (!choice) {
+      return {
+        isCorrect: false,
+        shouldCount: false,
+        feedback: "Choose one answer choice, then select Check answer."
+      };
+    }
+
+    if (choice.id === problem.answerChoiceId) {
+      return {
+        isCorrect: true,
+        shouldCount: true,
+        feedback: `Correct.\n\nAnswer: ${answerWithUnit(problem)}\n\n${problem.reasoningLabel || "Reaction reasoning"}:\n${problem.explanation}`
+      };
+    }
+
+    const choiceNote = choice.feedback ? `\n\n${choice.feedback}` : "";
+
+    return {
+      isCorrect: false,
+      shouldCount: true,
+      feedback: `Not quite yet.${choiceNote}\n\nFirst hint: ${problem.firstHint}`
+    };
+  }
+
   function extractNumberDetails(text) {
     const cleanText = String(text).replace(/,/g, "");
     const classroomScientific = cleanText.match(/([-+]?(?:\d+(?:\.\d*)?|\.\d+))\s*(?:x|\*)\s*10\s*(?:\^|\*\*)?\s*([-+]?\d+)/i);
@@ -324,6 +361,10 @@
   function evaluateAnswer(problem, studentText) {
     if (problem.answerType === "coefficients") {
       return evaluateCoefficientAnswer(problem, studentText);
+    }
+
+    if (problem.answerType === "multiple-choice") {
+      return evaluateMultipleChoiceAnswer(problem, studentText);
     }
 
     if (problem.answerType === "text") {

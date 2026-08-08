@@ -77,6 +77,16 @@ This topic includes:
 - common branched substituents
 
 Students are shown either a skeletal line-angle structure or an expanded structure and enter the organic compound name. Some eligible structures are intentionally drawn in a folded layout so the longest continuous chain is not simply the most horizontal path. This controlled version uses acyclic substituted alkanes only: no rings, no double or triple bonds, no stereochemistry, and no functional groups beyond the listed alkyl and halogen substituents. Common substituent names such as isopropyl, sec-butyl, and tert-butyl are accepted.
+
+### Chemical Reactions
+
+This topic includes:
+
+- random chemical reactions problem
+- identify reaction type
+- predict products
+
+Students answer multiple-choice questions about dehydration, hydrolysis, double displacement, hydrogenation of alkenes, hydration of alkenes, and hydrohalogenation of alkenes. Product-prediction problems include five answer choices. Hydration and hydrohalogenation examples require students to apply Markovnikov's rule.
 ## How To Try It
 
 Open `index.html` in a web browser.
@@ -95,6 +105,7 @@ The app does not require Python, installation, accounts, or internet access when
 - `topic_naming.js` contains the simple compound naming problem generators.
 - `topic_stoichiometry.js` contains the molar mass and stoichiometry problem generators.
 - `topic_organic_naming.js` contains the substituted alkane naming problem generators and structure drawings.
+- `topic_chemical_reactions.js` contains the reaction classification and product prediction problem generators.
 - `topics/` keeps organized source copies for future topic work.
 - `test_practice_logic.js` checks the important problem logic.
 - `ADDING_TOPICS.md` explains how future topic modules should be added.
@@ -146,6 +157,13 @@ If students choose `random organic naming problem`, the app selects problem type
 - 25% halogen substituents
 - 25% mixed substituents
 - 20% common branched substituents
+
+## Random Problem Mix For Chemical Reactions
+
+If students choose `random chemical reactions problem`, the app selects problem types with this distribution:
+
+- 50% identify reaction type
+- 50% predict products
 ## Canvas Summary
 
 Canvas needs a web address, not a local file path. To use this app in a Canvas module, host this folder somewhere that provides an HTTPS link, then add that link to Canvas as an External URL module item.

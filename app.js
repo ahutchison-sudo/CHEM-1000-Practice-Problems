@@ -11,8 +11,11 @@
   const problemTopic = document.getElementById("problemTopic");
   const attemptText = document.getElementById("attemptText");
   const questionText = document.getElementById("questionText");
+  const unitPath = document.querySelector(".unit-path");
   const answerForm = document.getElementById("answerForm");
+  const answerLabel = document.querySelector("label[for='answerInput']");
   const answerInput = document.getElementById("answerInput");
+  const answerChoices = document.getElementById("answerChoices");
   const feedbackBox = document.getElementById("feedbackBox");
   const scoreText = document.getElementById("scoreText");
 
@@ -85,6 +88,63 @@
     questionText.textContent = problem.question;
   }
 
+  function choiceHtml(choice) {
+    return choice.html || choice.text || "";
+  }
+
+  function renderAnswerControls(problem) {
+    const isMultipleChoice = problem.answerType === "multiple-choice";
+    unitPath.hidden = isMultipleChoice;
+    answerChoices.hidden = !isMultipleChoice;
+    answerChoices.replaceChildren();
+    answerForm.classList.toggle("multiple-choice-mode", isMultipleChoice);
+    answerInput.hidden = isMultipleChoice;
+    answerInput.disabled = isMultipleChoice;
+    answerLabel.textContent = isMultipleChoice ? "Choose one answer" : "Your answer";
+
+    if (!isMultipleChoice) {
+      answerInput.value = "";
+      answerInput.placeholder = problem.answerPlaceholder || "Example: 250 mg";
+      answerInput.focus();
+      return;
+    }
+
+    for (const choice of problem.choices || []) {
+      const label = document.createElement("label");
+      label.className = "answer-choice";
+
+      const radio = document.createElement("input");
+      radio.type = "radio";
+      radio.name = "answerChoice";
+      radio.value = choice.id;
+
+      const letter = document.createElement("span");
+      letter.className = "choice-letter";
+      letter.textContent = choice.label;
+
+      const text = document.createElement("span");
+      text.className = "choice-text";
+      text.innerHTML = choiceHtml(choice);
+
+      label.append(radio, letter, text);
+      answerChoices.appendChild(label);
+    }
+
+    const firstChoice = answerChoices.querySelector("input[type='radio']");
+    if (firstChoice) {
+      firstChoice.focus();
+    }
+  }
+
+  function studentAnswerText() {
+    if (state.currentProblem && state.currentProblem.answerType === "multiple-choice") {
+      const selectedChoice = answerChoices.querySelector("input[name='answerChoice']:checked");
+      return selectedChoice ? selectedChoice.value : "";
+    }
+
+    return answerInput.value;
+  }
+
   function newProblem() {
     state.currentProblem = logic.generateProblem(topicSelect.value, problemTypeSelect.value);
     state.problemCompleted = false;
@@ -93,9 +153,7 @@
 
     problemTopic.textContent = `${state.currentProblem.practiceTopicName}: ${state.currentProblem.problemType}`;
     renderQuestion(state.currentProblem);
-    answerInput.value = "";
-    answerInput.placeholder = state.currentProblem.answerPlaceholder || "Example: 250 mg";
-    answerInput.focus();
+    renderAnswerControls(state.currentProblem);
     updateAttemptText();
     const startMessage = state.currentProblem.startMessage || "Enter your answer, then choose Check answer. You have two attempts for this problem. Units are welcome but not required.\n\nTip: arrange each relationship so the unwanted unit cancels and the requested unit remains.";
     setFeedback(startMessage, "neutral");
@@ -107,7 +165,7 @@
       return;
     }
 
-    const result = logic.evaluateAnswer(state.currentProblem, answerInput.value);
+    const result = logic.evaluateAnswer(state.currentProblem, studentAnswerText());
 
     if (!result.shouldCount) {
       setFeedback(result.feedback, "needs-work");
