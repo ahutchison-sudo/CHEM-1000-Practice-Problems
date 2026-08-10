@@ -55,11 +55,14 @@
     const linkCarbon = options.linkCarbon || null;
     const isDonor = Boolean(options.isDonor);
     const points = { 1: [118, 95], 2: [88, 143], 3: [36, 143], 4: [8, 95], 5: [42, 48], O: [91, 48] };
-    const bonds = [[1, 2], [2, 3], [3, 4], [4, 5], [5, "O"], ["O", 1]];
+    const bonds = [[1, 2], [2, 3], [3, 4], [4, 5], [5, "O-left"], ["O-right", 1]];
+    const oxygenBondPoints = { "O-left": [77, 48], "O-right": [105, 48] };
     const parts = ['<svg class="' + className + '" viewBox="0 0 142 205" role="img" aria-label="' + sugar.name + ' pyranose ring">'];
     parts.push('<g class="carb-bonds">');
     for (const [start, end] of bonds) {
-      parts.push('<line x1="' + points[start][0] + '" y1="' + points[start][1] + '" x2="' + points[end][0] + '" y2="' + points[end][1] + '"/>');
+      const startPoint = points[start] || oxygenBondPoints[start];
+      const endPoint = points[end] || oxygenBondPoints[end];
+      parts.push('<line x1="' + startPoint[0] + '" y1="' + startPoint[1] + '" x2="' + endPoint[0] + '" y2="' + endPoint[1] + '"/>');
     }
     parts.push('</g><text class="carb-oxygen" x="' + points.O[0] + '" y="' + points.O[1] + '">O</text>');
 
@@ -69,9 +72,7 @@
       const dy = direction === "up" ? -33 : 37;
       const showingBond = (isDonor && carbon === (sugar.anomericCarbon || 1)) || (!isDonor && carbon === linkCarbon);
       parts.push('<line class="carb-substituent" x1="' + x + '" y1="' + y + '" x2="' + x + '" y2="' + (y + dy * 0.66) + '"/>');
-      if (showingBond) {
-        parts.push('<circle class="carb-link-site" cx="' + x + '" cy="' + (y + dy) + '" r="5"/>');
-      } else {
+      if (!showingBond) {
         parts.push('<text class="carb-oh" x="' + x + '" y="' + (y + dy) + '">OH</text>');
       }
       parts.push('<text class="carb-carbon" x="' + (x + 10) + '" y="' + (y - 6) + '">' + carbon + '</text>');
@@ -80,9 +81,6 @@
     const [x5, y5] = points[5];
     parts.push('<line class="carb-substituent" x1="' + x5 + '" y1="' + y5 + '" x2="' + x5 + '" y2="' + (y5 - 30) + '"/>');
     parts.push('<text class="carb-oh" x="' + x5 + '" y="' + (y5 - 43) + '">CH₂OH</text>');
-    if (linkCarbon === 6) {
-      parts.push('<circle class="carb-link-site" cx="' + x5 + '" cy="' + (y5 - 43) + '" r="5"/>');
-    }
     parts.push('</svg>');
     return parts.join("");
   }
@@ -107,7 +105,17 @@
     const startY = donorY + donorSite.y;
     const endX = acceptorX + acceptorSite.x;
     const endY = acceptorY + acceptorSite.y;
-    return '<svg class="carbohydrate-product" viewBox="0 0 370 225" role="img" aria-label="Disaccharide structure"><g transform="translate(' + donorX + ' ' + donorY + ')">' + donorRing + '</g><g transform="translate(' + acceptorX + ' ' + acceptorY + ')">' + acceptorRing + '</g><path class="carb-glycosidic-bond" d="M ' + startX + ' ' + startY + ' C 182 ' + startY + ', 190 ' + endY + ', ' + endX + ' ' + endY + '"/><text class="carb-bond-oxygen" x="' + ((startX + endX) / 2) + '" y="' + ((startY + endY) / 2 - 8) + '">O</text></svg>';
+    const oxygenX = (startX + endX) / 2;
+    const oxygenY = (startY + endY) / 2;
+    const gap = 13;
+    const totalLength = Math.hypot(endX - startX, endY - startY);
+    const unitX = (endX - startX) / totalLength;
+    const unitY = (endY - startY) / totalLength;
+    const leftX = oxygenX - unitX * gap;
+    const leftY = oxygenY - unitY * gap;
+    const rightX = oxygenX + unitX * gap;
+    const rightY = oxygenY + unitY * gap;
+    return '<svg class="carbohydrate-product" viewBox="0 0 370 225" role="img" aria-label="Disaccharide structure"><g transform="translate(' + donorX + ' ' + donorY + ')">' + donorRing + '</g><g transform="translate(' + acceptorX + ' ' + acceptorY + ')">' + acceptorRing + '</g><line class="carb-glycosidic-bond" x1="' + startX + '" y1="' + startY + '" x2="' + leftX + '" y2="' + leftY + '"/><line class="carb-glycosidic-bond" x1="' + rightX + '" y1="' + rightY + '" x2="' + endX + '" y2="' + endY + '"/><text class="carb-bond-oxygen" x="' + oxygenX + '" y="' + oxygenY + '">O</text></svg>';
   }
 
   function choiceItems(item) {
