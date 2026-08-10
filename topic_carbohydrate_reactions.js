@@ -75,7 +75,6 @@
       if (!showingBond) {
         parts.push('<text class="carb-oh" x="' + x + '" y="' + (y + dy) + '">OH</text>');
       }
-      parts.push('<text class="carb-carbon" x="' + (x + 10) + '" y="' + (y - 6) + '">' + carbon + '</text>');
     }
 
     const [x5, y5] = points[5];
