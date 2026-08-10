@@ -424,3 +424,105 @@ input {
 .answer-choice sub {
   font-size: 0.72em;
 }
+
+
+.carbohydrate-question {
+  display: grid;
+  gap: 14px;
+}
+
+.carbohydrate-question p {
+  margin-bottom: 0;
+}
+
+.carbohydrate-reactants {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.carbohydrate-reactants > div {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-transform: capitalize;
+}
+
+.carbohydrate-plus,
+.carbohydrate-arrow {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--blue);
+}
+
+.carbohydrate-ring {
+  width: 142px;
+  height: 205px;
+  overflow: visible;
+}
+
+.carb-bonds line,
+.carb-substituent,
+.carb-glycosidic-bond {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.carb-glycosidic-bond {
+  stroke-width: 3;
+}
+
+.carb-oxygen,
+.carb-oh,
+.carb-bond-oxygen {
+  fill: var(--ink);
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 15px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.carb-carbon {
+  fill: var(--muted);
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 10px;
+  text-anchor: middle;
+}
+
+.carb-link-site {
+  fill: var(--teal);
+}
+
+.carbohydrate-product {
+  display: block;
+  width: min(100%, 440px);
+  height: auto;
+  min-height: 180px;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.answer-choice:has(.carbohydrate-product) {
+  align-items: center;
+}
+
+@media (max-width: 620px) {
+  .carbohydrate-reactants {
+    justify-content: flex-start;
+  }
+
+  .carbohydrate-reactants .carbohydrate-ring {
+    width: 118px;
+    height: 170px;
+  }
+}

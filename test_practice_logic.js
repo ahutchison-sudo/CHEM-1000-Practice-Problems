@@ -497,6 +497,28 @@ assert.strictEqual(logic.REDOX_AGENT_EXAMPLES.length, 8);
 assert.ok(logic.REDOX_AGENT_EXAMPLES.some((item) => item.agentType === "oxidizing agent"));
 assert.ok(logic.REDOX_AGENT_EXAMPLES.some((item) => item.agentType === "reducing agent"));
 
+const randomCarbohydrateProblem = logic.generateProblem("carbohydrate-reactions", logic.RANDOM_PROBLEM_TYPE);
+assert.strictEqual(randomCarbohydrateProblem.practiceTopicName, "Carbohydrate Reactions");
+assert.strictEqual(randomCarbohydrateProblem.answerType, "multiple-choice");
+assert.ok(randomCarbohydrateProblem.questionHtml.includes("carbohydrate-reactants"));
+assert.strictEqual(randomCarbohydrateProblem.choices.length, 5);
+assert.ok(randomCarbohydrateProblem.choices.every((choice) => choice.html.includes("carbohydrate-product")));
+assert.ok(randomCarbohydrateProblem.choices.some((choice) => choice.id === randomCarbohydrateProblem.answerChoiceId));
+
+const carbohydrateProblem = logic.generateProblem("carbohydrate-reactions", "Predict disaccharide product");
+assert.strictEqual(carbohydrateProblem.practiceTopicId, "carbohydrate-reactions");
+assert.strictEqual(carbohydrateProblem.topic, "Predict disaccharide product");
+assert.strictEqual(carbohydrateProblem.choices.length, 5);
+result = logic.evaluateAnswer(carbohydrateProblem, carbohydrateProblem.answerChoiceId);
+assert.strictEqual(result.isCorrect, true);
+assert.strictEqual(result.shouldCount, true);
+assert.ok(result.feedback.includes("Carbohydrate-reaction reasoning"));
+
+assert.strictEqual(logic.CARBOHYDRATE_REACTION_EXAMPLES.length, 7);
+assert.ok(logic.CARBOHYDRATE_REACTION_EXAMPLES.some((item) => item.anomer === "α"));
+assert.ok(logic.CARBOHYDRATE_REACTION_EXAMPLES.some((item) => item.anomer === "β"));
+assert.ok(logic.CARBOHYDRATE_REACTION_EXAMPLES.some((item) => item.acceptorCarbon === 6));
+
 console.log("All web app logic checks passed.");
 
 

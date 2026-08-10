@@ -78,6 +78,16 @@ This topic includes:
 
 Students are shown either a skeletal line-angle structure or an expanded structure and enter the organic compound name. Some eligible structures are intentionally drawn in a folded layout so the longest continuous chain is not simply the most horizontal path. This controlled version uses acyclic substituted alkanes only: no rings, no double or triple bonds, no stereochemistry, and no functional groups beyond the listed alkyl and halogen substituents. Common substituent names such as isopropyl, sec-butyl, and tert-butyl are accepted.
 
+### Carbohydrate Reactions
+
+This topic includes:
+
+- random carbohydrate reaction
+- predict the disaccharide product from two pyranose monosaccharides
+- specified α/β glycosidic-bond configuration and carbon positions
+
+Students compare five SVG Haworth-style disaccharide structures and select the product that matches the stated glycosidic bond. The question and all answer choices show ring structures rather than condensed formulas.
+
 ### Oxidation–Reduction Reactions
 
 This topic includes:
@@ -117,6 +127,7 @@ The app does not require Python, installation, accounts, or internet access when
 - `topic_organic_naming.js` contains the substituted alkane naming problem generators and structure drawings.
 - `topic_chemical_reactions.js` contains the reaction classification and product prediction problem generators.
 - `topic_redox.js` contains oxidation-state and redox-agent problem generators.
+- `topic_carbohydrate_reactions.js` contains pyranose-ring and disaccharide product-prediction problem generators.
 - `topics/` keeps organized source copies for future topic work.
 - `test_practice_logic.js` checks the important problem logic.
 - `ADDING_TOPICS.md` explains how future topic modules should be added.
@@ -168,6 +179,12 @@ If students choose `random organic naming problem`, the app selects problem type
 - 25% halogen substituents
 - 25% mixed substituents
 - 20% common branched substituents
+
+## Random Problem Mix For Carbohydrate Reactions
+
+If students choose `random carbohydrate reaction`, the app selects the following problem type:
+
+- 100% predict disaccharide product
 
 ## Random Problem Mix For Oxidation–Reduction Reactions
 
