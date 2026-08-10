@@ -471,6 +471,32 @@ result = logic.evaluateAnswer({
 assert.strictEqual(result.isCorrect, true);
 assert.strictEqual(result.shouldCount, true);
 
+const randomRedoxProblem = logic.generateProblem("oxidation-reduction-reactions", logic.RANDOM_PROBLEM_TYPE);
+assert.strictEqual(randomRedoxProblem.practiceTopicName, "Oxidation–Reduction Reactions");
+assert.strictEqual(randomRedoxProblem.answerType, "multiple-choice");
+assert.ok(randomRedoxProblem.questionHtml.includes("redox-question"));
+assert.ok(randomRedoxProblem.choices.some((choice) => choice.id === randomRedoxProblem.answerChoiceId));
+assert.ok(randomRedoxProblem.explanation.length > 0);
+
+for (const problemType of ["Identify oxidation state", "Identify oxidizing or reducing agent"]) {
+  const problem = logic.generateProblem("oxidation-reduction-reactions", problemType);
+  assert.strictEqual(problem.practiceTopicId, "oxidation-reduction-reactions");
+  assert.strictEqual(problem.practiceTopicName, "Oxidation–Reduction Reactions");
+  assert.strictEqual(problem.topic, problemType);
+  assert.strictEqual(problem.answerType, "multiple-choice");
+  assert.ok(problem.choices.some((choice) => choice.id === problem.answerChoiceId));
+  assert.ok(problem.answerText.length > 0);
+}
+
+assert.deepStrictEqual(Object.fromEntries(logic.REDOX_RANDOM_PROBLEM_WEIGHTS), {
+  "Identify oxidation state": 50,
+  "Identify oxidizing or reducing agent": 50
+});
+assert.strictEqual(logic.REDOX_OXIDATION_STATE_EXAMPLES.length, 11);
+assert.strictEqual(logic.REDOX_AGENT_EXAMPLES.length, 8);
+assert.ok(logic.REDOX_AGENT_EXAMPLES.some((item) => item.agentType === "oxidizing agent"));
+assert.ok(logic.REDOX_AGENT_EXAMPLES.some((item) => item.agentType === "reducing agent"));
+
 console.log("All web app logic checks passed.");
 
 
