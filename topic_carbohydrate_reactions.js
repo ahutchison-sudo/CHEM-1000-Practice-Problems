@@ -24,8 +24,6 @@
   const REACTION_EXAMPLES = [
     example("glucose", "altrose", "α", 1, 4),
     example("galactose", "glucose", "β", 1, 4),
-    example("glucose", "fructose", "α", 1, 2),
-    example("fructose", "galactose", "β", 2, 4),
     example("altrose", "glucose", "β", 1, 3)
   ];
 
@@ -71,8 +69,8 @@
       const direction = carbon === 1 ? (anomer === "α" ? "down" : "up") : sugar.oh[carbon - 1];
       const dy = direction === "up" ? -33 : 37;
       const showingBond = (isDonor && carbon === (sugar.anomericCarbon || 1)) || (!isDonor && carbon === linkCarbon);
-      parts.push('<line class="carb-substituent" x1="' + x + '" y1="' + y + '" x2="' + x + '" y2="' + (y + dy * 0.66) + '"/>');
       if (!showingBond) {
+        parts.push('<line class="carb-substituent" x1="' + x + '" y1="' + y + '" x2="' + x + '" y2="' + (y + dy * 0.66) + '"/>');
         parts.push('<text class="carb-oh" x="' + x + '" y="' + (y + dy) + '">OH</text>');
       }
     }
@@ -91,20 +89,27 @@
   function disaccharideSvg(item) {
     const donorRing = ringSvg(item.donor, item.anomer, { isDonor: true, asGroup: true, className: "carbohydrate-ring carbohydrate-product-ring" });
     const acceptorRing = ringSvg(item.acceptor, "β", { linkCarbon: item.acceptorCarbon, asGroup: true, className: "carbohydrate-ring carbohydrate-product-ring" });
-    const donorX = 20;
-    const donorY = 92;
-    const donorSite = { x: 118, y: item.anomer === "α" ? 132 : 58 };
-    const acceptorSites = { 2: { x: 88, y: 143 }, 3: { x: 36, y: 143 }, 4: { x: 8, y: 95 } };
-    const acceptorSite = acceptorSites[item.acceptorCarbon] || acceptorSites[4];
-    const acceptorX = 258;
-    const acceptorY = donorY + donorSite.y - acceptorSite.y;
-    const startX = donorX + donorSite.x;
-    const startY = donorY + donorSite.y;
-    const endX = acceptorX + acceptorSite.x;
-    const endY = acceptorY + acceptorSite.y;
-    const oxygenX = (startX + endX) / 2;
-    const gap = 13;
-    return '<svg class="carbohydrate-product" viewBox="0 -42 420 340" role="img" aria-label="Disaccharide structure"><g transform="translate(' + donorX + ' ' + donorY + ')">' + donorRing + '</g><g transform="translate(' + acceptorX + ' ' + acceptorY + ')">' + acceptorRing + '</g><line class="carb-glycosidic-bond" x1="' + startX + '" y1="' + startY + '" x2="' + (oxygenX - gap) + '" y2="' + startY + '"/><line class="carb-glycosidic-bond" x1="' + (oxygenX + gap) + '" y1="' + startY + '" x2="' + endX + '" y2="' + endY + '"/><text class="carb-bond-oxygen" x="' + oxygenX + '" y="' + startY + '">O</text></svg>';
+    const donorX = 18;
+    const donorY = 28;
+    const acceptorX = 250;
+    const acceptorY = 28;
+    const donorCarbon = { x: donorX + 118, y: donorY + 95 };
+    const glycosidicOxygen = { x: donorCarbon.x, y: donorY + (item.anomer === "α" ? 132 : 58) };
+    const acceptorCarbons = {
+      2: { x: acceptorX + 88, y: acceptorY + 143 },
+      3: { x: acceptorX + 36, y: acceptorY + 143 },
+      4: { x: acceptorX + 8, y: acceptorY + 95 }
+    };
+    const acceptorCarbon = acceptorCarbons[item.acceptorCarbon] || acceptorCarbons[4];
+    const oxygenDirection = glycosidicOxygen.y > donorCarbon.y ? 1 : -1;
+    const gap = 10;
+    const donorBondEndY = glycosidicOxygen.y - oxygenDirection * gap;
+    const dx = acceptorCarbon.x - glycosidicOxygen.x;
+    const dy = acceptorCarbon.y - glycosidicOxygen.y;
+    const length = Math.hypot(dx, dy);
+    const acceptorBondStartX = glycosidicOxygen.x + (dx / length) * gap;
+    const acceptorBondStartY = glycosidicOxygen.y + (dy / length) * gap;
+    return '<svg class="carbohydrate-product" viewBox="0 0 420 245" role="img" aria-label="Disaccharide structure"><g transform="translate(' + donorX + ' ' + donorY + ')">' + donorRing + '</g><g transform="translate(' + acceptorX + ' ' + acceptorY + ')">' + acceptorRing + '</g><line class="carb-glycosidic-bond" x1="' + donorCarbon.x + '" y1="' + donorCarbon.y + '" x2="' + donorCarbon.x + '" y2="' + donorBondEndY + '"/><line class="carb-glycosidic-bond" x1="' + acceptorBondStartX + '" y1="' + acceptorBondStartY + '" x2="' + acceptorCarbon.x + '" y2="' + acceptorCarbon.y + '"/><text class="carb-bond-oxygen" x="' + glycosidicOxygen.x + '" y="' + glycosidicOxygen.y + '">O</text></svg>';
   }
 
   function choiceItems(item) {
@@ -112,7 +117,7 @@
       item,
       { ...item, anomer: item.anomer === "α" ? "β" : "α" },
       { ...item, acceptorCarbon: item.acceptorCarbon === 4 ? 3 : 4 },
-      { ...item, donorCarbon: item.donorCarbon === 1 ? 2 : 1 },
+      { ...item, acceptorCarbon: item.acceptorCarbon === 3 ? 2 : 3 },
       { donor: item.acceptor, acceptor: item.donor, anomer: item.anomer, donorCarbon: item.donorCarbon, acceptorCarbon: item.acceptorCarbon }
     ];
     return alternatives;

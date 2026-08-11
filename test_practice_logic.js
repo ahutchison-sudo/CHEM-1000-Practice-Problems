@@ -514,7 +514,7 @@ assert.strictEqual(result.isCorrect, true);
 assert.strictEqual(result.shouldCount, true);
 assert.ok(result.feedback.includes("Carbohydrate-reaction reasoning"));
 
-assert.ok(logic.CARBOHYDRATE_REACTION_EXAMPLES.length >= 5);
+assert.ok(logic.CARBOHYDRATE_REACTION_EXAMPLES.length >= 3);
 assert.ok(logic.CARBOHYDRATE_REACTION_EXAMPLES.some((item) => item.anomer === "α"));
 assert.ok(logic.CARBOHYDRATE_REACTION_EXAMPLES.some((item) => item.anomer === "β"));
 assert.ok(logic.CARBOHYDRATE_REACTION_EXAMPLES.some((item) => item.acceptorCarbon === 3));
