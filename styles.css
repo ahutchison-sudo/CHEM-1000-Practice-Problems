@@ -526,3 +526,44 @@ input {
     height: 170px;
   }
 }
+
+
+.approved-reactants {
+  gap: 18px;
+}
+
+.approved-reactants figure,
+.carbohydrate-choice {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.approved-monosaccharide-image {
+  display: block;
+  width: min(190px, 28vw);
+  max-height: 180px;
+  object-fit: contain;
+}
+
+.carbohydrate-image-frame {
+  display: grid;
+  place-items: center;
+  min-height: 185px;
+  width: 100%;
+}
+
+.approved-carbohydrate-image {
+  display: block;
+  width: min(100%, 440px);
+  max-height: 225px;
+  object-fit: contain;
+}
+
+.carbohydrate-choice figcaption,
+.approved-reactants figcaption {
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-transform: capitalize;
+}

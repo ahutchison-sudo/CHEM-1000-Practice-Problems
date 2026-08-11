@@ -519,6 +519,14 @@ assert.ok(logic.CARBOHYDRATE_REACTION_EXAMPLES.some((item) => item.anomer === "Î
 assert.ok(logic.CARBOHYDRATE_REACTION_EXAMPLES.some((item) => item.anomer === "Î²"));
 assert.ok(logic.CARBOHYDRATE_REACTION_EXAMPLES.some((item) => item.acceptorCarbon === 3));
 
+const approvedCarbohydrateProblem = logic.generateProblem("carbohydrate-reactions", "Predict disaccharide product");
+assert.strictEqual(approvedCarbohydrateProblem.choices.length, 5);
+assert.ok(approvedCarbohydrateProblem.choices.every((choice) => choice.html.includes("<img")));
+assert.ok(approvedCarbohydrateProblem.choices.every((choice) => choice.structureModified === false));
+assert.ok(approvedCarbohydrateProblem.choices.every((choice) => choice.structureManifestId && choice.pubchemCid && choice.assetFilename));
+assert.ok(approvedCarbohydrateProblem.questionHtml.includes("approved-monosaccharide-image"));
+assert.ok(approvedCarbohydrateProblem.instructorMetadata.structure_manifest_id);
+
 console.log("All web app logic checks passed.");
 
 
