@@ -61,7 +61,7 @@
       topic: "Identify strongest intermolecular force",
       answerType: "multiple-choice",
       question: "What is the strongest intermolecular force between these two particles?",
-      questionHtml: '<div class="intermolecular-question"><p>What is the strongest intermolecular force between these two particles?</p><div class="reaction-equation"><span>' + item.firstFormula + '</span><span class="intermolecular-pair-separator">and</span><span>' + item.secondFormula + '</span></div></div>',
+      questionHtml: '<div class="intermolecular-question"><p>What is the strongest intermolecular force between these two particles?</p><div class="reaction-equation"><span>' + item.firstFormula + '</span>&nbsp;<span class="intermolecular-pair-separator">and</span>&nbsp;<span>' + item.secondFormula + '</span></div></div>',
       choices,
       answerChoiceId: answerChoice.id,
       answerText: item.force,
