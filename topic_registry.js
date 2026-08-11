@@ -51,6 +51,10 @@
     ? require("./topic_concentration.js")
     : root.ChemPracticeConcentrationTopic;
 
+  const acidBaseTopic = typeof require === "function"
+    ? require("./topic_acid_base.js")
+    : root.ChemPracticeAcidBaseTopic;
+
   // Carbohydrate Reactions remains in topic_carbohydrate_reactions.js but is
   // temporarily excluded from the student menu pending further image review.
 
@@ -65,7 +69,8 @@
     chemicalReactionsTopic,
     redoxTopic,
     intermolecularForcesTopic,
-    concentrationTopic
+    concentrationTopic,
+    acidBaseTopic
   ];
 });
 
