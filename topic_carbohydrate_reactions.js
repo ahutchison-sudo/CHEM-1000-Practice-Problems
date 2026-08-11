@@ -26,8 +26,6 @@
     example("galactose", "glucose", "β", 1, 4),
     example("glucose", "fructose", "α", 1, 2),
     example("fructose", "galactose", "β", 2, 4),
-    example("mannose", "glucose", "β", 1, 6),
-    example("galactose", "mannose", "α", 1, 6),
     example("altrose", "glucose", "β", 1, 3)
   ];
 
@@ -56,7 +54,7 @@
     const isDonor = Boolean(options.isDonor);
     const points = { 1: [118, 95], 2: [88, 143], 3: [36, 143], 4: [8, 95], 5: [42, 48], O: [91, 48] };
     const bonds = [[1, 2], [2, 3], [3, 4], [4, 5], [5, "O-left"], ["O-right", 1]];
-    const oxygenBondPoints = { "O-left": [77, 48], "O-right": [105, 48] };
+    const oxygenBondPoints = { "O-left": [72, 48], "O-right": [110, 48] };
     const parts = [options.asGroup
       ? '<g class="' + className + '" aria-label="' + sugar.name + ' pyranose ring">'
       : '<svg class="' + className + '" viewBox="0 0 142 205" role="img" aria-label="' + sugar.name + ' pyranose ring">'];
@@ -93,35 +91,27 @@
   function disaccharideSvg(item) {
     const donorRing = ringSvg(item.donor, item.anomer, { isDonor: true, asGroup: true, className: "carbohydrate-ring carbohydrate-product-ring" });
     const acceptorRing = ringSvg(item.acceptor, "β", { linkCarbon: item.acceptorCarbon, asGroup: true, className: "carbohydrate-ring carbohydrate-product-ring" });
-    const donorX = 16;
-    const donorY = 14;
-    const acceptorX = 248;
-    const acceptorY = 14;
+    const donorX = 20;
+    const donorY = 92;
     const donorSite = { x: 118, y: item.anomer === "α" ? 132 : 58 };
-    const acceptorSites = { 2: { x: 88, y: 143 }, 3: { x: 36, y: 143 }, 4: { x: 8, y: 95 }, 6: { x: 42, y: -10 } };
+    const acceptorSites = { 2: { x: 88, y: 143 }, 3: { x: 36, y: 143 }, 4: { x: 8, y: 95 } };
     const acceptorSite = acceptorSites[item.acceptorCarbon] || acceptorSites[4];
+    const acceptorX = 258;
+    const acceptorY = donorY + donorSite.y - acceptorSite.y;
     const startX = donorX + donorSite.x;
     const startY = donorY + donorSite.y;
     const endX = acceptorX + acceptorSite.x;
     const endY = acceptorY + acceptorSite.y;
     const oxygenX = (startX + endX) / 2;
-    const oxygenY = (startY + endY) / 2;
-    const gap = 12;
-    const totalLength = Math.hypot(endX - startX, endY - startY);
-    const unitX = (endX - startX) / totalLength;
-    const unitY = (endY - startY) / totalLength;
-    const leftX = oxygenX - unitX * gap;
-    const leftY = oxygenY - unitY * gap;
-    const rightX = oxygenX + unitX * gap;
-    const rightY = oxygenY + unitY * gap;
-    return '<svg class="carbohydrate-product" viewBox="0 -28 420 250" role="img" aria-label="Disaccharide structure"><g transform="translate(' + donorX + ' ' + donorY + ')">' + donorRing + '</g><g transform="translate(' + acceptorX + ' ' + acceptorY + ')">' + acceptorRing + '</g><line class="carb-glycosidic-bond" x1="' + startX + '" y1="' + startY + '" x2="' + leftX + '" y2="' + leftY + '"/><line class="carb-glycosidic-bond" x1="' + rightX + '" y1="' + rightY + '" x2="' + endX + '" y2="' + endY + '"/><text class="carb-bond-oxygen" x="' + oxygenX + '" y="' + oxygenY + '">O</text></svg>';
+    const gap = 13;
+    return '<svg class="carbohydrate-product" viewBox="0 -42 420 340" role="img" aria-label="Disaccharide structure"><g transform="translate(' + donorX + ' ' + donorY + ')">' + donorRing + '</g><g transform="translate(' + acceptorX + ' ' + acceptorY + ')">' + acceptorRing + '</g><line class="carb-glycosidic-bond" x1="' + startX + '" y1="' + startY + '" x2="' + (oxygenX - gap) + '" y2="' + startY + '"/><line class="carb-glycosidic-bond" x1="' + (oxygenX + gap) + '" y1="' + startY + '" x2="' + endX + '" y2="' + endY + '"/><text class="carb-bond-oxygen" x="' + oxygenX + '" y="' + startY + '">O</text></svg>';
   }
 
   function choiceItems(item) {
     const alternatives = [
       item,
       { ...item, anomer: item.anomer === "α" ? "β" : "α" },
-      { ...item, acceptorCarbon: item.acceptorCarbon === 4 ? 6 : 4 },
+      { ...item, acceptorCarbon: item.acceptorCarbon === 4 ? 3 : 4 },
       { ...item, donorCarbon: item.donorCarbon === 1 ? 2 : 1 },
       { donor: item.acceptor, acceptor: item.donor, anomer: item.anomer, donorCarbon: item.donorCarbon, acceptorCarbon: item.acceptorCarbon }
     ];
