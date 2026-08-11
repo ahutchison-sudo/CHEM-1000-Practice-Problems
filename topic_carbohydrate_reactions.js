@@ -50,7 +50,7 @@
   }
 
   function img(structure, className) {
-    return '<img class="' + className + '" src="' + ASSET_PATH + structure.filename + '" alt="' + structure.label + '">';
+    return '<img class="' + className + '" src="' + ASSET_PATH + structure.filename + "?v=20260811-png" + '" alt="' + structure.label + '">';
   }
 
   function shuffled(items) {
