@@ -43,6 +43,10 @@
     ? require("./topic_redox.js")
     : root.ChemPracticeRedoxTopic;
 
+  const intermolecularForcesTopic = typeof require === "function"
+    ? require("./topic_intermolecular_forces.js")
+    : root.ChemPracticeIntermolecularForcesTopic;
+
   // Carbohydrate Reactions remains in topic_carbohydrate_reactions.js but is
   // temporarily excluded from the student menu pending further image review.
 
@@ -55,7 +59,8 @@
     stoichiometryTopic,
     organicNamingTopic,
     chemicalReactionsTopic,
-    redoxTopic
+    redoxTopic,
+    intermolecularForcesTopic
   ];
 });
 
