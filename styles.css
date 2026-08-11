@@ -542,9 +542,10 @@ input {
 
 .approved-monosaccharide-image {
   display: block;
-  width: min(190px, 28vw);
+  width: auto;
+  height: auto;
+  max-width: min(190px, 28vw);
   max-height: 180px;
-  object-fit: contain;
 }
 
 .carbohydrate-image-frame {
@@ -556,9 +557,10 @@ input {
 
 .approved-carbohydrate-image {
   display: block;
-  width: min(100%, 440px);
+  width: auto;
+  height: auto;
+  max-width: min(100%, 440px);
   max-height: 225px;
-  object-fit: contain;
 }
 
 .carbohydrate-choice figcaption,
