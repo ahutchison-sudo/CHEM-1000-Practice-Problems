@@ -13,7 +13,7 @@
 
   const { randomChoice } = helpers;
   const ASSET_PATH = "assets/carbohydrates/";
-  const ASSET_VERSION = "20260818-haworth-v2";
+  const ASSET_VERSION = "20260818-haworth-v2-reviewed";
   const HAWORTH_SOURCE = "Instructor-approved local Haworth PNG (Wikimedia Commons source)";
 
   const STRUCTURES = {
@@ -29,7 +29,7 @@
     lactulose: asset("lactulose", 11333, "lactulose.png", "lactulose", "a4a9f8f2151584719d27bf24a9ff68cccb71f2af5ad2f18960d8696fc3647c78")
   };
 
-  const PRODUCT_IDS = ["maltose", "cellobiose", "lactose", "sucrose", "lactulose"];
+  const PRODUCT_IDS = ["maltose", "cellobiose", "lactose", "sucrose"];
 
   const PROBLEMS = [
     reaction("maltose", "\u03B1-D-glucopyranose", "\u03B2-D-glucopyranose", "\u03B1 (1\u21924)", "Maltose has an \u03B1-D-glucose donor linked from C1 to C4 of a second glucose residue."),
@@ -115,7 +115,7 @@
   return {
     id: "carbohydrate-reactions",
     name: "Carbohydrate Reactions",
-    description: "Practice identifying approved Haworth disaccharide products from their monosaccharide components and glycosidic linkages.",
+    description: "Practice identifying approved, straight-bond Haworth disaccharide products from their monosaccharide components and glycosidic linkages.",
     randomLabel: "random carbohydrate reaction",
     problemGenerators: { "Predict disaccharide product": makeProblem },
     randomWeights: [["Predict disaccharide product", 100]],
