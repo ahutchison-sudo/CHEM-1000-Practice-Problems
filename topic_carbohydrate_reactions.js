@@ -13,7 +13,7 @@
 
   const { randomChoice } = helpers;
   const ASSET_PATH = "assets/carbohydrates/";
-  const ASSET_VERSION = "20260811-haworth-v2";
+  const ASSET_VERSION = "20260818-haworth-v2";
   const HAWORTH_SOURCE = "Instructor-approved local Haworth PNG (Wikimedia Commons source)";
 
   const STRUCTURES = {
