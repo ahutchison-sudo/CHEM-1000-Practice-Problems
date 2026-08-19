@@ -13,7 +13,7 @@
 
   const { randomChoice } = helpers;
   const ASSET_PATH = "assets/carbohydrates/";
-  const ASSET_VERSION = "20260818-haworth-v2-reviewed";
+  const ASSET_VERSION = "20260819-curated-only";
   const HAWORTH_SOURCE = "Instructor-approved local Haworth PNG (Wikimedia Commons source)";
 
   const STRUCTURES = {
@@ -29,13 +29,11 @@
     lactulose: asset("lactulose", 11333, "lactulose.png", "lactulose", "a4a9f8f2151584719d27bf24a9ff68cccb71f2af5ad2f18960d8696fc3647c78")
   };
 
-  const PRODUCT_IDS = ["maltose", "cellobiose", "lactose", "sucrose"];
+  const PRODUCT_IDS = ["cellobiose", "lactose"];
 
   const PROBLEMS = [
-    reaction("maltose", "\u03B1-D-glucopyranose", "\u03B2-D-glucopyranose", "\u03B1 (1\u21924)", "Maltose has an \u03B1-D-glucose donor linked from C1 to C4 of a second glucose residue."),
     reaction("cellobiose", "\u03B2-D-glucopyranose", "\u03B2-D-glucopyranose", "\u03B2 (1\u21924)", "Cellobiose has a \u03B2-D-glucose donor linked from C1 to C4 of a second glucose residue."),
     reaction("lactose", "\u03B2-D-galactopyranose", "\u03B2-D-glucopyranose", "\u03B2 (1\u21924)", "Lactose has a \u03B2-D-galactose donor linked from C1 to C4 of glucose."),
-    reaction("sucrose", "\u03B1-D-glucopyranose", "\u03B2-D-fructofuranose", "\u03B1 (1\u21922) \u03B2", "Sucrose links the anomeric C1 of \u03B1-D-glucose to the anomeric C2 of \u03B2-D-fructofuranose.")
   ];
 
   function asset(manifestId, pubchemCid, filename, label, sha256) {
