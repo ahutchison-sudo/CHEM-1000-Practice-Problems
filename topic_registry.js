@@ -55,10 +55,6 @@
     ? require("./topic_acid_base.js")
     : root.ChemPracticeAcidBaseTopic;
 
-  const carbohydrateReactionsTopic = typeof require === "function"
-    ? require("./topic_carbohydrate_reactions.js")
-    : root.ChemPracticeCarbohydrateReactionsTopic;
-
   // Add future topic modules to this list after their script files are loaded
   // in index.html. The order here is the order students see in the menu.
   return [
@@ -71,8 +67,7 @@
     redoxTopic,
     intermolecularForcesTopic,
     concentrationTopic,
-    acidBaseTopic,
-    carbohydrateReactionsTopic
+    acidBaseTopic
   ];
 });
 
