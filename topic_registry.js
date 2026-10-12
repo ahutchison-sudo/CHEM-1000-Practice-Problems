@@ -55,6 +55,9 @@
     ? require("./topic_acid_base.js")
     : root.ChemPracticeAcidBaseTopic;
 
+  // Carbohydrate reactions remain disabled pending image approval and five
+  // reviewed structural choices. See CARBOHYDRATE_REVIEW.md.
+
   // Add future topic modules to this list after their script files are loaded
   // in index.html. The order here is the order students see in the menu.
   return [

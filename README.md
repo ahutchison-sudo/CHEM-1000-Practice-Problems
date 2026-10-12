@@ -80,13 +80,11 @@ Students are shown either a skeletal line-angle structure or an expanded structu
 
 ### Carbohydrate Reactions
 
-This topic includes:
+**Disabled in the student-facing topic registry pending instructor review.**
 
-- random carbohydrate reaction
-- predict the disaccharide product from two pyranose monosaccharides
-- specified α/β glycosidic-bond configuration and carbon positions
+The implementation provides an isolated preview of cellobiose and lactose formation through specified β(1→4) linkages. Both local PNG products show the β reducing-end glucose anomer. These are formal condensation/structure-matching exercises, not a claim that mixing free sugars selectively produces that linkage.
 
-Students compare five SVG Haworth-style disaccharide structures and select the product that matches the stated glycosidic bond. The question and all answer choices show ring structures rather than condensed formulas.
+The preview currently has **two PNG structural choices**, not five SVG choices. Five distinct, chemically meaningful disaccharide choices remain the release goal; excluded or unverified images must not be used to fill the count. See [CARBOHYDRATE_REVIEW.md](CARBOHYDRATE_REVIEW.md) for the complete 13-image audit, source references, missing diagrams, and instructor approval checklist.
 
 ### Oxidation–Reduction Reactions
 
@@ -127,7 +125,7 @@ The app does not require Python, installation, accounts, or internet access when
 - `topic_organic_naming.js` contains the substituted alkane naming problem generators and structure drawings.
 - `topic_chemical_reactions.js` contains the reaction classification and product prediction problem generators.
 - `topic_redox.js` contains oxidation-state and redox-agent problem generators.
-- `topic_carbohydrate_reactions.js` contains pyranose-ring and disaccharide product-prediction problem generators.
+- `topic_carbohydrate_reactions.js` contains the disabled disaccharide structure-matching preview and asset review metadata.
 - `topics/` keeps organized source copies for future topic work.
 - `test_practice_logic.js` checks the important problem logic.
 - `ADDING_TOPICS.md` explains how future topic modules should be added.
@@ -182,7 +180,7 @@ If students choose `random organic naming problem`, the app selects problem type
 
 ## Random Problem Mix For Carbohydrate Reactions
 
-If students choose `random carbohydrate reaction`, the app selects the following problem type:
+In an isolated instructor preview, `random carbohydrate reaction` selects the following problem type (unavailable in the student menu):
 
 - 100% predict disaccharide product
 
